@@ -163,7 +163,7 @@ MonoBehaviour:
   PerlinoiseIntensity3: 2.5
   PerlinoiseDestortion3: 10
   TerrainIntensity: 0.1
-  TerrainDestortion: 50
+  TerrainDestortion: 40
   whitness: 3.5
   PlanetColor: {r: 0.4102012, g: 0.511, b: 0.40784314, a: 0}
   MountainColor: {r: 1, g: 1, b: 1, a: 0}
@@ -582,8 +582,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  far clip plane: 2000
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -608,13 +608,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.260061, y: 25.995646, z: -489.28604}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.468, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1081983069}
-  m_RootOrder: 0
+  m_Father: {fileID: 1219136285}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
@@ -649,39 +649,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!1 &1081983068
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1081983069}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1081983069
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081983068}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.260061, y: -25.995646, z: -298.71396}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 963194228}
-  - {fileID: 1219136285}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1219136280
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,9 +661,9 @@ GameObject:
   - component: {fileID: 1219136284}
   - component: {fileID: 1219136283}
   - component: {fileID: 1219136281}
-  - component: {fileID: 1219136288}
   - component: {fileID: 1219136286}
   - component: {fileID: 1219136287}
+  - component: {fileID: 1219136288}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -718,7 +685,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!23 &1219136283
 MeshRenderer:
@@ -769,7 +736,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219136280}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1219136285
 Transform:
   m_ObjectHideFlags: 0
@@ -783,8 +750,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 850576206}
-  m_Father: {fileID: 1081983069}
-  m_RootOrder: 1
+  - {fileID: 963194228}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &1219136286
 SphereCollider:
@@ -812,11 +780,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 963194225}
-  sensitivity: 10
+  sensitivity: 500
   speed: 10
   Gravitystrenght: 1
---- !u!135 &1219136288
-SphereCollider:
+  planetCamerashiftDistance: 500
+--- !u!136 &1219136288
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -825,8 +794,9 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.69
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2020618186
 GameObject:

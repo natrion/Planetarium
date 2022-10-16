@@ -7,6 +7,8 @@ using UnityEngine;
 public class GeneratePlanet : MonoBehaviour
 {
     public int[] CompelxityOfPlanets;
+   // public float[] atmosphereDensityOfPlanets;
+   // public float atmosphereDensity;
     private int MeshNumber;
     private Mesh mesh;
     private Vector3[] vertices;
@@ -169,6 +171,7 @@ public class GeneratePlanet : MonoBehaviour
         MeshCollider MeshCollider = transform.GetChild(MeshNumber).gameObject.AddComponent(typeof(MeshCollider)) as MeshCollider;
 
         CompelxityOfPlanets[MeshNumber] = Complexity;
+        //atmosphereDensityOfPlanets[MeshNumber] = atmosphereDensity;
 
 
         // transform.GetChild(0).position += new Vector3(size / 2 , 0);
@@ -182,11 +185,14 @@ public class GeneratePlanet : MonoBehaviour
     void Start()
     {
         CompelxityOfPlanets = new int[transform.childCount];
+        //atmosphereDensityOfPlanets = new float[transform.childCount];
 
-        Complexity = 1000;
+       // atmosphereDensity = 0.02f;
+        Complexity = 1000;       
         MeshNumber = 0;
         OneGeneratePlanet();
 
+        //atmosphereDensity = 0.01f;
         Complexity = 300;
         MeshNumber = 1;
         OneGeneratePlanet();

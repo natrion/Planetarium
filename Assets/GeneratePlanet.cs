@@ -37,8 +37,15 @@ public class GeneratePlanet : MonoBehaviour
     public Color BiomColor;
     public float BiomColorIntensity;
     public float BiomGenerateHight;
-
-
+    public GameObject PlanetCanvas;
+    private GameObject plantcopy;
+    private GameObject plantcopyRock;
+    public float PerlinoiseIntensityRock;
+    public float PerlinoiseDestortionRock;
+    private GameObject plantcopyRock2;
+    public float PerlinoiseIntensityRock2;
+    public float PerlinoiseDestortionRock2;
+    public bool generateRock;
     void OneGeneratePlanet()
     {
         
@@ -87,13 +94,14 @@ public class GeneratePlanet : MonoBehaviour
                 }else if(d == 0)
                 {
                     PerlinNoisewas = PerlinNoyse;
-                }else if(d> Complexity *0.90)
+                }else if(d> Complexity *0.40)
                 {
-                    PerlinNoyse += (PerlinNoisewas - PerlinNoyse) /  ( ( Complexity * 0.10f ) - ((float)d - Complexity * 0.90f) )  ;
+                    PerlinNoyse += (PerlinNoisewas - PerlinNoyse) /  ( ( Complexity * 0.60f ) - ((float)d  - Complexity * 0.40f) )   ;
                 }
                 //float z = r * Mathf.Sin(a2);
                 //float y2 = r * Mathf.Cos(a2);
                 vertices[i * Complexity + d ] = new Vector3(x + x *PerlinNoyse, y +  y *PerlinNoyse, (z - r1) +  (z- r1 )* PerlinNoyse  );
+
                 if (snowHight > PerlinNoyse)
                 {
                     colors[i * Complexity + d] = new Color(PlanetColor.r  , PlanetColor.g , PlanetColor.b , PlanetColor.a);
@@ -109,6 +117,36 @@ public class GeneratePlanet : MonoBehaviour
                 if ((PerlinNoyse / maxPerlinNoyse) < BiomGenerateHight)
                 {
                     colors[i * Complexity + d] = new Color(colors[i * Complexity + d].r + PerlinNoyseBiom * (BiomColor.r - colors[i * Complexity + d].r ) * BiomColorIntensity, colors[i * Complexity + d].g + PerlinNoyseBiom * (  BiomColor.g - colors[i * Complexity + d].g) * BiomColorIntensity, colors[i * Complexity + d].b + PerlinNoyseBiom * (  BiomColor.b - colors[i * Complexity + d].b) * BiomColorIntensity, PlanetColor.a);
+                }
+
+                float PerlinNoyseRock = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortionRock + 10000, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortionRock + 10000) ;
+                if (generateRock == true)
+                {
+                    float rockGenerate = Random.Range(0, PerlinoiseIntensityRock * (1-PerlinNoyseBiom)  );
+                    if (rockGenerate > PerlinoiseIntensityRock * (1 - PerlinNoyseBiom) - 1)
+                    {
+                        GameObject plantCopyRock = Instantiate(plantcopyRock);
+                        plantCopyRock.transform.position = new Vector3 (vertices[i * Complexity + d].x * plantcopy.transform.localScale.x + plantcopy.transform.position.x,
+                                                                        vertices[i * Complexity + d].y * plantcopy.transform.localScale.y + plantcopy.transform.position.y,
+                                                                        vertices[i * Complexity + d].z * plantcopy.transform.localScale.z + plantcopy.transform.position.z);
+                        plantCopyRock.transform.parent = plantcopy.transform;
+                        plantCopyRock.tag = "Untagged";
+                    }
+                }
+
+                float PerlinNoyseRock2 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortionRock2 + 10000, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortionRock2 + 10000);
+                if (generateRock == true)
+                {
+                    float rockGenerate = Random.Range(0, PerlinoiseIntensityRock2 * (1 - PerlinNoyseBiom));
+                    if (rockGenerate > PerlinoiseIntensityRock2 * (1 - PerlinNoyseBiom) - 1)
+                    {
+                        GameObject plantCopyRock2 = Instantiate(plantcopyRock2);
+                        plantCopyRock2.transform.position = new Vector3(vertices[i * Complexity + d].x * plantcopy.transform.localScale.x + plantcopy.transform.position.x,
+                                                                        vertices[i * Complexity + d].y * plantcopy.transform.localScale.y + plantcopy.transform.position.y,
+                                                                        vertices[i * Complexity + d].z * plantcopy.transform.localScale.z + plantcopy.transform.position.z);
+                        plantCopyRock2.transform.parent = plantcopy.transform;
+                        plantCopyRock2.tag = "Untagged";
+                    }
                 }
                 //colors[i * Complexity + d] = new Color(1 + PlanetColor.r / ((maxPerlinNoyse-PerlinNoyse) / whitness), 1 + PlanetColor.g  / ((maxPerlinNoyse - PerlinNoyse) / whitness), 1 + PlanetColor.b / ((maxPerlinNoyse - PerlinNoyse) / whitness), PlanetColor.a);
                 //vertices[i * Complexity + d + howManyPointsHad] = new Vector3(i* VertexSpacing - size / 2  , d* VertexSpacing - size / 2 , 0 );
@@ -161,16 +199,20 @@ public class GeneratePlanet : MonoBehaviour
 
         
 
-        mesh = transform.GetChild(MeshNumber).GetComponent<MeshFilter>().mesh;
+        mesh = plantcopy.GetComponent<MeshFilter>().mesh;
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.vertices = vertices;
         mesh.colors = colors;
         mesh.uv = uvs;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
-        MeshCollider MeshCollider = transform.GetChild(MeshNumber).gameObject.AddComponent(typeof(MeshCollider)) as MeshCollider;
+        MeshCollider MeshCollider = plantcopy.gameObject.AddComponent(typeof(MeshCollider)) as MeshCollider;
 
-        CompelxityOfPlanets[MeshNumber] = Complexity;
+        if (MeshNumber != -1 )
+        {
+            CompelxityOfPlanets[MeshNumber] = Complexity;
+        }
+        
         //atmosphereDensityOfPlanets[MeshNumber] = atmosphereDensity;
 
 
@@ -184,18 +226,71 @@ public class GeneratePlanet : MonoBehaviour
     }
     void Start()
     {
-        CompelxityOfPlanets = new int[transform.childCount];
+        CompelxityOfPlanets = new int[10];
+
+
         //atmosphereDensityOfPlanets = new float[transform.childCount];
 
-       // atmosphereDensity = 0.02f;
-        Complexity = 1000;       
-        MeshNumber = 0;
+        // atmosphereDensity = 0.02f;
+
+        //////////////////////////////////////////////////////////GENERATING ROCK FOR PLANET
+        generateRock = false;
+        MeshNumber = -1;
+
+        plantcopy = Instantiate(PlanetCanvas);
+        plantcopyRock = plantcopy;
+        plantcopy.transform.parent = transform;
+
+        Complexity = 5;
+
         OneGeneratePlanet();
 
-        //atmosphereDensity = 0.01f;
-        Complexity = 300;
-        MeshNumber = 1;
+        Destroy(plantcopyRock);
+        //////////////////////////////////////////////////////////GENERATING ROCK FOR PLANET
+
+        MeshNumber = -1;
+
+        plantcopy = Instantiate(PlanetCanvas);
+        plantcopyRock2 = plantcopy;
+        plantcopy.transform.parent = transform;
+
+        Complexity = 10;
+
         OneGeneratePlanet();
+
+        Destroy(plantcopyRock2);
+        //////////////////////////////////////////////////////////GENERATING PLANET
+        generateRock = true;
+        MeshNumber = 0;
+
+        plantcopy = Instantiate(PlanetCanvas);
+        plantcopy.transform.parent = transform;
+
+        Complexity = 1050;    
+        
+        OneGeneratePlanet();
+        
+        //plantcopyRock = null;
+        //plantcopyRock2 = null;
+
+        /////////////////////////////////////////////////////////GENERATING PLANET
+
+        MeshNumber = 1;
+
+        plantcopy = Instantiate(PlanetCanvas);
+        plantcopy.transform.parent = transform;
+
+        Complexity = 200;
+
+        plantcopy.transform.position = new Vector3(0, 1000, 0);
+        OneGeneratePlanet();
+
+
+
+        //atmosphereDensity = 0.01f;
+        //Complexity = 300;
+        //MeshNumber = 1;
+        //OneGeneratePlanet();
     }
     //for (int i = 0; i < 25; i++)
     // {

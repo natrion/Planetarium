@@ -51,41 +51,45 @@ public class Player : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        //Camera.transform.position = transform.position;
-        int ComplexityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().CompelxityOfPlanets[other.transform.GetSiblingIndex() ] ;
-        float distance = Mathf.Abs(other.transform.position.x - transform.position.x) + Mathf.Abs(other.transform.position.y - transform.position.y) + Mathf.Abs(other.transform.position.z - transform.position.z);
-        Vector3 direction = (other.transform.position - transform.position).normalized;
-        
-        transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / distance  * Gravitystrenght)* ComplexityOfPlanet / 500);
-
-        if(distance < ComplexityOfPlanet / 1.5f )
+        if (other.gameObject.CompareTag("Planet"))
         {
-            if (Onplanet == false)
-            {
-                Camera.transform.localEulerAngles = Camera.transform.up;
-               // RenderSettings.fog = true;
-            }
-            transform.rotation = Quaternion.FromToRotation(-transform.up, direction) * transform.rotation;
-            Onplanet = true;
-            planetPosition = other.transform.position;
+            //Camera.transform.position = transform.position;
+            int ComplexityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().CompelxityOfPlanets[other.transform.GetSiblingIndex()];
+            float distance = Mathf.Abs(other.transform.position.x - transform.position.x) + Mathf.Abs(other.transform.position.y - transform.position.y) + Mathf.Abs(other.transform.position.z - transform.position.z);
+            Vector3 direction = (other.transform.position - transform.position).normalized;
 
-           // float atmosphereDensityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().atmosphereDensityOfPlanets[other.transform.GetSiblingIndex()];
-          //  RenderSettings.fogDensity = atmosphereDensityOfPlanet * ( 1 - (distance / (ComplexityOfPlanet / 1.5f)) ) ;
-        }
-        else
-        {
+            transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / (distance * distance) * Gravitystrenght) * ComplexityOfPlanet / 500);
 
-            if (planetPosition == other.transform.position)
+            if (distance < ComplexityOfPlanet / 1.5f)
             {
-                if (Onplanet == true)
+                if (Onplanet == false)
                 {
-                    transform.eulerAngles = new Vector3(0, 0, 0);
-                    Camera.transform.eulerAngles = new Vector3(0, 0, 0);
-                   // RenderSettings.fog = false;
+                    Camera.transform.localEulerAngles = Camera.transform.up;
+                    // RenderSettings.fog = true;
                 }
-                Onplanet = false;
-            }            
+                transform.rotation = Quaternion.FromToRotation(-transform.up, direction) * transform.rotation;
+                Onplanet = true;
+                planetPosition = other.transform.position;
+
+                // float atmosphereDensityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().atmosphereDensityOfPlanets[other.transform.GetSiblingIndex()];
+                //  RenderSettings.fogDensity = atmosphereDensityOfPlanet * ( 1 - (distance / (ComplexityOfPlanet / 1.5f)) ) ;
+            }
+            else
+            {
+
+                if (planetPosition == other.transform.position)
+                {
+                    if (Onplanet == true)
+                    {
+                        transform.eulerAngles = new Vector3(0, 0, 0);
+                        Camera.transform.eulerAngles = new Vector3(0, 0, 0);
+                        // RenderSettings.fog = false;
+                    }
+                    Onplanet = false;
+                }
+            }
         }
+        
     }
 
     void FixedUpdate()

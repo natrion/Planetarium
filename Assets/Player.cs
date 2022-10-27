@@ -15,12 +15,14 @@ public class Player : MonoBehaviour
     private Vector3 planetPosition;
     private float YRotation;
     public GameObject PouseMenu;
+    public Transform PlayerFolder;
 
     [DllImport("user32.dll")]
     static extern bool SetCursorPos(int X, int Y);
 
     void Start()
     {
+
         SetCursorPos(-1, -1);
         PouseMenu.SetActive(false);
 
@@ -53,18 +55,41 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Planet"))
         {
+            int GetSiblingIndex = other.transform.GetSiblingIndex();
+            if (other.transform.parent.GetComponent<GeneratePlanet>().CompelxityOfPlanets.Length - 1  < GetSiblingIndex)
+            {
+                return;
+            }
             //Camera.transform.position = transform.position;
-            int ComplexityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().CompelxityOfPlanets[other.transform.GetSiblingIndex()];
+            
+            float ComplexityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().CompelxityOfPlanets[GetSiblingIndex] * other.transform.localScale.x;
             float distance = Mathf.Abs(other.transform.position.x - transform.position.x) + Mathf.Abs(other.transform.position.y - transform.position.y) + Mathf.Abs(other.transform.position.z - transform.position.z);
             Vector3 direction = (other.transform.position - transform.position).normalized;
 
-            transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / (distance * distance) * Gravitystrenght) * ComplexityOfPlanet / 500);
+            if (other.transform.localScale.x == 0.7f)
+            {
+                transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / Mathf.Sqrt(distance) * Gravitystrenght));
+            }
+            else
+            {
+                if (distance < ComplexityOfPlanet)
+                {
+                    transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / Mathf.Sqrt(distance) * Gravitystrenght));
+                }
+                
+            }
+            
 
             if (distance < ComplexityOfPlanet / 1.5f)
             {
                 if (Onplanet == false)
                 {
                     Camera.transform.localEulerAngles = Camera.transform.up;
+                    transform.parent = other.transform;
+                    for (int i = 0; i < other.transform.childCount; i++)
+                    {
+                        other.transform.GetChild(i).gameObject.SetActive(true);
+                    }
                     // RenderSettings.fog = true;
                 }
                 transform.rotation = Quaternion.FromToRotation(-transform.up, direction) * transform.rotation;
@@ -83,17 +108,22 @@ public class Player : MonoBehaviour
                     {
                         transform.eulerAngles = new Vector3(0, 0, 0);
                         Camera.transform.eulerAngles = new Vector3(0, 0, 0);
+                        transform.parent = PlayerFolder;
+                        for (int i = 0; i < other.transform.childCount; i++)
+                        {
+                            other.transform.GetChild(i).gameObject.SetActive(false);
+                        }
                         // RenderSettings.fog = false;
                     }
                     Onplanet = false;
                 }
             }
         }
-        
     }
 
     void FixedUpdate()
     {
+        speed += speed * Input.GetAxis("Mouse ScrollWheel") / 2;
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");

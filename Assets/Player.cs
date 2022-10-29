@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 
 public class Player : MonoBehaviour
 {
-    public bool pouse = false;
+    public static bool pouse = false;
     public GameObject Camera;
     public float sensitivity;
     public float speed;
     public float Gravitystrenght;
     private bool Onplanet = false;
     public  float planetCamerashiftDistance;
-    private Vector3 planetPosition;
+    private GameObject planetGameObject;
     private float YRotation;
     public GameObject PouseMenu;
     public Transform PlayerFolder;
@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-
+        pouse = false;
         SetCursorPos(-1, -1);
         PouseMenu.SetActive(false);
 
@@ -55,14 +55,10 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Planet"))
         {
-            int GetSiblingIndex = other.transform.GetSiblingIndex();
-            if (other.transform.parent.GetComponent<GeneratePlanet>().CompelxityOfPlanets.Length - 1  < GetSiblingIndex)
-            {
-                return;
-            }
+            
             //Camera.transform.position = transform.position;
             
-            float ComplexityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().CompelxityOfPlanets[GetSiblingIndex] * other.transform.localScale.x;
+            float ComplexityOfPlanet = other.GetComponent<Planet>().PlanetComplexity * other.transform.localScale.x;
             float distance = Mathf.Abs(other.transform.position.x - transform.position.x) + Mathf.Abs(other.transform.position.y - transform.position.y) + Mathf.Abs(other.transform.position.z - transform.position.z);
             Vector3 direction = (other.transform.position - transform.position).normalized;
 
@@ -88,13 +84,16 @@ public class Player : MonoBehaviour
                     transform.parent = other.transform;
                     for (int i = 0; i < other.transform.childCount; i++)
                     {
-                        other.transform.GetChild(i).gameObject.SetActive(true);
+                        if (!other.transform.GetChild(i).gameObject.CompareTag("Planet"))
+                        {
+                            other.transform.GetChild(i).gameObject.SetActive(true);
+                        }
                     }
                     // RenderSettings.fog = true;
                 }
                 transform.rotation = Quaternion.FromToRotation(-transform.up, direction) * transform.rotation;
                 Onplanet = true;
-                planetPosition = other.transform.position;
+                planetGameObject = other.gameObject;
 
                 // float atmosphereDensityOfPlanet = other.transform.parent.GetComponent<GeneratePlanet>().atmosphereDensityOfPlanets[other.transform.GetSiblingIndex()];
                 //  RenderSettings.fogDensity = atmosphereDensityOfPlanet * ( 1 - (distance / (ComplexityOfPlanet / 1.5f)) ) ;
@@ -102,7 +101,7 @@ public class Player : MonoBehaviour
             else
             {
 
-                if (planetPosition == other.transform.position)
+                if (planetGameObject== other.gameObject)
                 {
                     if (Onplanet == true)
                     {
@@ -111,7 +110,11 @@ public class Player : MonoBehaviour
                         transform.parent = PlayerFolder;
                         for (int i = 0; i < other.transform.childCount; i++)
                         {
-                            other.transform.GetChild(i).gameObject.SetActive(false);
+                            if (!other.transform.GetChild(i).gameObject.CompareTag("Planet"))
+                            {
+                                other.transform.GetChild(i).gameObject.SetActive(false);
+                            }
+                           
                         }
                         // RenderSettings.fog = false;
                     }

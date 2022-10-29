@@ -155,7 +155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerScript: {fileID: 1219136287}
-  CompelxityOfPlanets: 
   Complexity: 1000
   PerlinoiseIntensity: 10
   PerlinoiseDestortion: 0.5
@@ -689,7 +688,7 @@ GameObject:
   - component: {fileID: 1219136288}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -801,7 +800,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda6363fd6da7b5408532cf033c6a367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pouse: 0
   Camera: {fileID: 963194225}
   sensitivity: 300
   speed: 5

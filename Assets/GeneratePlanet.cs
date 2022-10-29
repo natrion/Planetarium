@@ -9,10 +9,10 @@ using UnityEngine;
 public class GeneratePlanet : MonoBehaviour
 {
     public Player playerScript;
-    public int[] CompelxityOfPlanets;
-   // public float[] atmosphereDensityOfPlanets;
-   // public float atmosphereDensity;
-    private int MeshNumber;
+    // public float[] atmosphereDensityOfPlanets;
+    // public float atmosphereDensity;
+    //public float DegenerativePerlinNoiseDestortion;
+    //public float DegenerativePerlinNoiseIntensity;
     private Mesh mesh;
     private Vector3[] vertices;
     private Color[] colors;
@@ -50,6 +50,7 @@ public class GeneratePlanet : MonoBehaviour
     public float PerlinoiseDestortionRock2;
     public bool generateRock;
     public Material sunMaterial;
+    private Vector3[] PlanetsPositions;
     void OneGeneratePlanet()
     {
         
@@ -88,9 +89,12 @@ public class GeneratePlanet : MonoBehaviour
                 float PerlinNoyse2 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion2, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion2) * (PerlinoiseIntensity2 / 10);
                 float PerlinNoyse3 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion3, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion3) * (PerlinoiseIntensity3 / 10);
                 float Terrein = Mathf.PerlinNoise((a2 - (a2 * 2)) * TerrainDestortion, (aPerlin - (aPerlin * 2)) * TerrainDestortion) * (TerrainIntensity / 10);
+                //float DegenerativePerlinNoise = Mathf.PerlinNoise((a2 - (a2 * 2)) * DegenerativePerlinNoiseDestortion, (aPerlin - (aPerlin * 2)) * DegenerativePerlinNoiseDestortion) * (DegenerativePerlinNoiseIntensity / 10);
 
-                float PerlinNoyse = PerlinNoyse1 * PerlinNoyse2* PerlinNoyse3 - Terrein;
-                float maxPerlinNoyse = ((PerlinoiseIntensity / 10) * (PerlinoiseIntensity2 / 10) * (PerlinoiseIntensity3 / 10)) ;
+                float PerlinNoyse =  PerlinNoyse1 * PerlinNoyse2* PerlinNoyse3  - Terrein ;
+                 
+
+                float maxPerlinNoyse = ((PerlinoiseIntensity / 10) * (PerlinoiseIntensity2 / 10) * (PerlinoiseIntensity3 / 10) ) ;
 
                 if (i == Complexity | i == 0)
                 {
@@ -135,6 +139,7 @@ public class GeneratePlanet : MonoBehaviour
                                                                         vertices[i * Complexity + d].z * plantcopy.transform.localScale.z + plantcopy.transform.position.z);
                         plantCopyRock.transform.parent = plantcopy.transform;
                         plantCopyRock.tag = "Untagged";
+                        plantCopyRock.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
                     }
                 }
 
@@ -150,6 +155,7 @@ public class GeneratePlanet : MonoBehaviour
                                                                         vertices[i * Complexity + d].z * plantcopy.transform.localScale.z + plantcopy.transform.position.z);
                         plantCopyRock2.transform.parent = plantcopy.transform;
                         plantCopyRock2.tag = "Untagged";
+                        plantCopyRock2.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
                     }
                 }
                 //colors[i * Complexity + d] = new Color(1 + PlanetColor.r / ((maxPerlinNoyse-PerlinNoyse) / whitness), 1 + PlanetColor.g  / ((maxPerlinNoyse - PerlinNoyse) / whitness), 1 + PlanetColor.b / ((maxPerlinNoyse - PerlinNoyse) / whitness), PlanetColor.a);
@@ -212,10 +218,6 @@ public class GeneratePlanet : MonoBehaviour
         mesh.RecalculateNormals();
         MeshCollider MeshCollider = plantcopy.gameObject.AddComponent(typeof(MeshCollider)) as MeshCollider;
 
-        if (MeshNumber != -1 )
-        {
-            CompelxityOfPlanets[MeshNumber] = Complexity;
-        }
         
         //atmosphereDensityOfPlanets[MeshNumber] = atmosphereDensity;
 
@@ -230,10 +232,9 @@ public class GeneratePlanet : MonoBehaviour
     }
     void Start()
     {
-        
-
         int PlanetNumber = Random.Range(0, 10);
-        CompelxityOfPlanets = new int[PlanetNumber+1];
+        
+        PlanetsPositions = new Vector3[PlanetNumber];
 
 
         //atmosphereDensityOfPlanets = new float[transform.childCount];
@@ -241,7 +242,6 @@ public class GeneratePlanet : MonoBehaviour
         // atmosphereDensity = 0.02f;
 
         generateRock = false;
-        MeshNumber = 0;
 
         plantcopy = Instantiate(PlanetCanvas);
         plantcopy.transform.parent = transform;
@@ -273,119 +273,33 @@ public class GeneratePlanet : MonoBehaviour
         
 
         plantcopy.transform.eulerAngles = new Vector3(90, 0, 0);
+        plantcopy.GetComponent<Planet>().PlanetComplexity = Complexity;
 
         OneGeneratePlanet();
 
         
         for (int i = 0; i != PlanetNumber; i++)
         {
-            snowHight = 0.0001f;
-            //////////////////////////////////////////////////////////GENERATING ROCK FOR PLANET
-            generateRock = false;
-            MeshNumber = -1;
+            GenerateParametersForPlanet(1100 , true);
+            PlanetsPositions[i] = plantcopy.transform.position;
 
-            plantcopy = Instantiate(PlanetCanvas);
-            plantcopyRock = plantcopy;
-            plantcopyRock.SetActive(false);
-            plantcopy.transform.parent = transform;
+            if (Complexity > 250)
+            {
+                float MoonNumber = Random.Range(0, 5 * ((float)Complexity / 1100 * 2 ));
 
-            Complexity = Random.Range(30, 40);
+                GameObject Bigplantcopy = plantcopy;
+                for (int g = 0; g < MoonNumber; g++)
+                {
+                    GenerateParametersForPlanet((float)Complexity / 1.5f , false);
+                    plantcopy.transform.parent = Bigplantcopy.transform;
+                    float a;
+                    if (Random.Range(-1, 2) == 1) { a = 1; } else { a = -1; }
+                    float b;
+                    if (Random.Range(-1, 2) == 1) { b = 1; } else { b = -1; }
 
-            PerlinoiseIntensity = Random.Range(20f, 40f);
-            PerlinoiseIntensity2 = Random.Range(10f, 20f);
-            PerlinoiseIntensity3 = Random.Range(5f, 10f);
-            PerlinoiseDestortion = Random.Range(0f, 2f);
-            PerlinoiseDestortion2 = Random.Range(1f, 3f);
-            PerlinoiseDestortion3 = Random.Range(2f, 5f);
-
-            PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            PerlinoiseIntensityBiom = Random.Range(0f, 10f);
-            PerlinoiseDestortionBiom = Random.Range(0f, 10f);
-            MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-
-            plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.1f, 0.4f);
-
-            OneGeneratePlanet();
-
-            Destroy(plantcopyRock);
-
-
-            //////////////////////////////////////////////////////////GENERATING ROCK FOR PLANET
-
-            MeshNumber = -1;
-
-            plantcopy = Instantiate(PlanetCanvas);
-            plantcopyRock2 = plantcopy;
-            plantcopyRock2.SetActive(false);
-            plantcopy.transform.parent = transform;
-
-            Complexity = Random.Range(4, 10);
-
-            PerlinoiseIntensity = Random.Range(20f, 40f);
-            PerlinoiseIntensity2 = Random.Range(10f, 20f);
-            PerlinoiseIntensity3 = Random.Range(5f, 10f);
-            PerlinoiseDestortion = Random.Range(0f, 2f);
-            PerlinoiseDestortion2 = Random.Range(1f, 3f);
-            PerlinoiseDestortion3 = Random.Range(2f, 5f);
-
-            PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            PerlinoiseIntensityBiom = Random.Range(0f, 10f);
-            PerlinoiseDestortionBiom = Random.Range(0f, 10f);
-            MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-
-            plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.1f, 0.4f);
-
-            OneGeneratePlanet();
-
-            Destroy(plantcopyRock2);
-            //////////////////////////////////////////////////////////GENERATING PLANET
-            generateRock = true;
-            MeshNumber = i + 1;
-
-            plantcopy = Instantiate(PlanetCanvas);
-            plantcopy.transform.parent = transform;
-            
-
-            float a;
-            if (Random.Range(-1, 2) == 1) { a = 1; } else { a = -1; }
-            float b;
-            if (Random.Range(-1, 2) == 1) { b = 1; } else { b = -1; }
-
-            plantcopy.transform.position = new Vector3(Random.Range(2000, 10000) * a, 0, Random.Range(2000, 10000) * b );          
-
-            Complexity = Random.Range(20, 1200);
-
-            PerlinoiseIntensity =  Random.Range(3f, 13f); 
-            PerlinoiseIntensity2 =  Random.Range(7f, 13f); 
-            PerlinoiseIntensity3 =  Random.Range(2f, 8f);
-            PerlinoiseDestortion =  Random.Range(0.1f, 0.9f); 
-            PerlinoiseDestortion2 = Random.Range(1.25f, 3.75f);
-            PerlinoiseDestortion3 = Random.Range(2.5f, 7.5f);
-                
-            TerrainDestortion = Random.Range(50f, 70f);
-            TerrainIntensity = Random.Range(0.1f, 0.15f);
-            whitness = Random.Range(1.5f, 4.5f);
-
-            PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            PerlinoiseIntensityBiom = Random.Range(1f, 2f);
-            PerlinoiseDestortionBiom = Random.Range(1f, 3f);
-            MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-
-            PerlinoiseDestortionRock = Random.Range(0f, 1f);
-            PerlinoiseDestortionRock2 = Random.Range(0.5f, 2f);
-            PerlinoiseIntensityRock = Random.Range(200, 3000);
-            PerlinoiseIntensityRock2 = Random.Range(100, 400);
-
-            
-
-            //Complexity = 1050;
-
-            OneGeneratePlanet();
-
-            plantcopy.transform.eulerAngles = new Vector3(90, 0, 0);
+                    plantcopy.transform.position = new Vector3(Random.Range(1000, 3000) * a + Bigplantcopy.transform.position.x, 0, Random.Range(1000, 3000) * b + Bigplantcopy.transform.position.z);
+                }
+            }
         }
 
         
@@ -433,14 +347,138 @@ public class GeneratePlanet : MonoBehaviour
                }
            }
     */
-    void FixedUpdate()
+    void GenerateParametersForPlanet(float MaxComplexity , bool DoPosition)
     {
-        if (playerScript.pouse == true)
+        snowHight = 0.0001f;
+        //////////////////////////////////////////////////////////GENERATING ROCK FOR PLANET
+        generateRock = false;
+
+
+        plantcopy = Instantiate(PlanetCanvas);
+        plantcopyRock = plantcopy;
+        plantcopyRock.SetActive(false);
+        plantcopy.transform.parent = transform;
+
+        Complexity = Random.Range(20, 40);
+
+        PerlinoiseIntensity = Random.Range(15f, 40f);
+        PerlinoiseIntensity2 = Random.Range(5f, 20f);
+        PerlinoiseIntensity3 = Random.Range(5f, 10f);
+        PerlinoiseDestortion = Random.Range(0.5f, 2f);
+        PerlinoiseDestortion2 = Random.Range(1f, 3f);
+        PerlinoiseDestortion3 = Random.Range(2f, 5f);
+
+        PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        PerlinoiseIntensityBiom = Random.Range(0f, 10f);
+        PerlinoiseDestortionBiom = Random.Range(0f, 10f);
+        MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+        plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.1f, 0.4f);
+
+        OneGeneratePlanet();
+
+        Destroy(plantcopyRock);
+
+
+        //////////////////////////////////////////////////////////GENERATING ROCK FOR PLANET
+
+
+
+        plantcopy = Instantiate(PlanetCanvas);
+        plantcopyRock2 = plantcopy;
+        plantcopyRock2.SetActive(false);
+        plantcopy.transform.parent = transform;
+
+        Complexity = Random.Range(8, 20);
+
+        PerlinoiseIntensity = Random.Range(0f, 40f);
+        PerlinoiseIntensity2 = Random.Range(0f, 20f);
+        PerlinoiseIntensity3 = Random.Range(0f, 10f);
+        PerlinoiseDestortion = Random.Range(0f, 2f);
+        PerlinoiseDestortion2 = Random.Range(0f, 3f);
+        PerlinoiseDestortion3 = Random.Range(0f, 5f);
+
+        PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        PerlinoiseIntensityBiom = Random.Range(0f, 10f);
+        PerlinoiseDestortionBiom = Random.Range(0f, 10f);
+        MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+        plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.1f, 0.4f);
+
+        OneGeneratePlanet();
+
+        Destroy(plantcopyRock2);
+        //////////////////////////////////////////////////////////GENERATING PLANET
+        generateRock = true;
+        
+
+        plantcopy = Instantiate(PlanetCanvas);
+        plantcopy.transform.parent = transform;
+        if (DoPosition == true)
         {
-            for (int i = 0; i < transform.childCount; i++)
+            bool GoodDistance = false;
+            while (GoodDistance == false)
             {
-                transform.GetChild(i).eulerAngles += new Vector3(0, 0.01f, 0);
+                float a;
+                if (Random.Range(-1, 2) == 1) { a = 1; } else { a = -1; }
+                float b;
+                if (Random.Range(-1, 2) == 1) { b = 1; } else { b = -1; }
+
+                plantcopy.transform.position = new Vector3(Random.Range(2000, 15000) * a, 0, Random.Range(2000, 15000) * b);
+                GoodDistance = true;
+
+                for (int d = 0; d < PlanetsPositions.Length; d++)
+                {
+                    float Distance = Mathf.Abs(PlanetsPositions[d].x - plantcopy.transform.position.x) + Mathf.Abs(PlanetsPositions[d].y - plantcopy.transform.position.y) + Mathf.Abs(PlanetsPositions[d].z - plantcopy.transform.position.z);
+                    if (Distance < 7000)
+                    {
+                        GoodDistance = false;
+                    }
+                }
+
             }
         }
+        
+
+        Complexity = Random.Range(20, (int)MaxComplexity);
+
+        PerlinoiseIntensity = Random.Range(3f, 13f);
+        PerlinoiseIntensity2 = Random.Range(7f, 13f);
+        PerlinoiseIntensity3 = Random.Range(2f / ((float)Complexity / 1100), 8f / ((float)Complexity / 1100));
+        PerlinoiseDestortion = Random.Range(0.1f, 0.9f);
+        PerlinoiseDestortion2 = Random.Range(1.25f, 3.75f);
+        PerlinoiseDestortion3 = Random.Range(2.5f * ((float)Complexity / 1100), 7.5f * ((float)Complexity / 1100));
+
+        TerrainDestortion = Random.Range(70f * ((float)Complexity / 1100), 100f * ((float)Complexity / 1100));
+        TerrainIntensity = Random.Range(0.05f / ((float)Complexity / 1100), 0.15f / ((float)Complexity / 1100));
+
+        //DegenerativePerlinNoiseDestortion = Random.Range(14f * ((float)Complexity / 1100), 20f * ((float)Complexity / 1100));
+        //DegenerativePerlinNoiseIntensity = Random.Range(1f / ((float)Complexity / 1100), 1f / ((float)Complexity / 1100));
+
+        whitness = Random.Range(1.5f, 4.5f);
+
+        PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        PerlinoiseIntensityBiom = Random.Range(1f, 2f);
+        PerlinoiseDestortionBiom = Random.Range(1f, 3f);
+        MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+        PerlinoiseDestortionRock = Random.Range(0f, 1f);
+        PerlinoiseDestortionRock2 = Random.Range(0.5f, 2f);
+        PerlinoiseIntensityRock = Random.Range(200, 1500);
+        PerlinoiseIntensityRock2 = Random.Range(100, 400);
+
+
+        
+        //Complexity = 1050;
+
+        OneGeneratePlanet();
+
+        plantcopy.transform.eulerAngles = new Vector3(90, 0, 0);
+        plantcopy.GetComponent<Planet>().PlanetComplexity = Complexity;
     }
+
+    
 }

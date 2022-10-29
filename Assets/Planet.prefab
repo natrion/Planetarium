@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7599360788587802900}
   - component: {fileID: 1161237913733558742}
   - component: {fileID: 4085586551751375617}
+  - component: {fileID: 2835486474933140731}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Planet
@@ -83,3 +84,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2835486474933140731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031347507119717172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 515b2df2c3dce8f4f863b5c4502e3cb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlanetComplexity: 0
+  playerScript: {fileID: 0}

@@ -5,6 +5,8 @@ using UnityEngine;
 public class Planet : MonoBehaviour
 {
     public float PlanetComplexity;
+    public float Intensity;
+
     void FixedUpdate()
     {
         if (Player.pouse == true)

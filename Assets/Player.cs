@@ -76,7 +76,7 @@ public class Player : MonoBehaviour
             }
             
 
-            if (distance < ComplexityOfPlanet / 1.5f)
+            if (distance < ComplexityOfPlanet + (other.GetComponent<Planet>().Intensity / 100) / 2.5f)
             {
                 if (Onplanet == false)
                 {

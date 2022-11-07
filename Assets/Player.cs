@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 public class Player : MonoBehaviour
 {
+    public float Damage;
     public static bool pouse = false;
     public GameObject Camera;
     public float sensitivity;
@@ -23,32 +24,59 @@ public class Player : MonoBehaviour
     void Start()
     {
         pouse = false;
-        SetCursorPos(-1, -1);
+        //SetCursorPos(-1, -1);
+        Cursor.visible = false;
         PouseMenu.SetActive(false);
 
     }
 
     void Update()
     {
+        if (Input.GetMouseButton(0))
+        {
+            RaycastHit hit ;
+            Ray ray = new Ray(Camera.transform.position, Camera.transform.forward);
+
+            if (Physics.Raycast(ray, out hit , 50f))
+            {
+                if (hit.collider.gameObject.CompareTag("Rock"))
+                {
+                    hit.collider.GetComponent<Planet>().Health -= Damage;
+
+                    float health = hit.collider.GetComponent<Planet>().Health;
+                    float maxHealth = hit.collider.GetComponent<Planet>().MaxHealth;
+                    float StartRockSize = hit.collider.GetComponent<Planet>().StartRockSize;
+
+                    hit.collider.transform.localScale = new Vector3(1, 1, 1) * (health / maxHealth * StartRockSize);
+
+                    if (2 > health)
+                    {
+                        Destroy(hit.collider.gameObject);
+                    }
+                    
+                }
+            }
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (pouse == false)
             {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
                 pouse = true;
                 PouseMenu.SetActive(false);
                 Time.timeScale = 1;
             }
             else
             {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 pouse = false;
                 PouseMenu.SetActive(true);
                 Time.timeScale = 0;
             }
         }
-        if (pouse == true)
-        {
-            SetCursorPos(-1, -1);
-        }
+
     }
 
     void OnTriggerStay(Collider other)

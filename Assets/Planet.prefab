@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8ab3d2ca42f8a17428663443711af446, type: 2}
+  - {fileID: 2100000, guid: 714f67831e820994bac7e67639586399, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,4 +97,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlanetComplexity: 0
-  playerScript: {fileID: 0}
+  Intensity: 0
+  Health: 0

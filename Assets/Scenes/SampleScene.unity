@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 121601309}
   - component: {fileID: 121601308}
   m_Layer: 0
-  m_Name: Planet
+  m_Name: SolarSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -180,7 +180,7 @@ MonoBehaviour:
   PerlinoiseIntensityRock2: 1000
   PerlinoiseDestortionRock2: 30
   generateRock: 0
-  sunMaterial: {fileID: 2100000, guid: bdb46f49e70f6b64d8992d0f85eeb6bb, type: 2}
+  sunMaterial: {fileID: 2100000, guid: 82e1029ebae63354aad10e5c41e44b30, type: 2}
 --- !u!23 &121601309
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -729,7 +729,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 714f67831e820994bac7e67639586399, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

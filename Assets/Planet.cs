@@ -7,6 +7,10 @@ public class Planet : MonoBehaviour
     public float PlanetComplexity;
     public float Intensity;
 
+    public float Health;
+    public float MaxHealth;
+    public float StartRockSize;
+
     void FixedUpdate()
     {
         if (Player.pouse == true)

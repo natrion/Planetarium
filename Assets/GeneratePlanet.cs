@@ -201,7 +201,7 @@ public class GeneratePlanet : MonoBehaviour
                                                                         vertices[i * Complexity + d].y * plantcopy.transform.localScale.y + plantcopy.transform.position.y,
                                                                         vertices[i * Complexity + d].z * plantcopy.transform.localScale.z + plantcopy.transform.position.z);
                         plantCopyRock.transform.parent = plantcopy.transform;
-                        plantCopyRock.tag = "Untagged";
+                        plantCopyRock.tag = "Rock";
                         plantCopyRock.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
                     }
                 }
@@ -217,7 +217,7 @@ public class GeneratePlanet : MonoBehaviour
                                                                         vertices[i * Complexity + d].y * plantcopy.transform.localScale.y + plantcopy.transform.position.y,
                                                                         vertices[i * Complexity + d].z * plantcopy.transform.localScale.z + plantcopy.transform.position.z);
                         plantCopyRock2.transform.parent = plantcopy.transform;
-                        plantCopyRock2.tag = "Untagged";
+                        plantCopyRock2.tag = "Rock";
                         plantCopyRock2.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
                     }
                 }
@@ -326,8 +326,8 @@ public class GeneratePlanet : MonoBehaviour
         snowHight = 0.1f;
 
         Light StarLight = plantcopy.AddComponent(typeof(Light)) as Light;
-        StarLight.range = Random.Range(1000,1500) * plantcopy.transform.localScale.x ;
-        StarLight.intensity = plantcopy.transform.localScale.x / Random.Range(0f, 5f);
+        StarLight.range = Random.Range(1000,1500) * plantcopy.transform.localScale.x * 4;
+        StarLight.intensity = plantcopy.transform.localScale.x / Random.Range(0f, 2f) * 10000000;
         StarLight.color = PlanetColor;
 
         plantcopy.GetComponent<MeshRenderer>().material = sunMaterial ;
@@ -440,8 +440,13 @@ public class GeneratePlanet : MonoBehaviour
         MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 
         plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.1f, 0.4f);
+        plantcopy.GetComponent<Planet>().Health = Complexity;
+        plantcopy.GetComponent<Planet>().MaxHealth = Complexity;
+        plantcopy.GetComponent<Planet>().StartRockSize = plantcopy.transform.localScale.x * 1.4f;
 
         OneGeneratePlanet();
+
+        
 
         Destroy(plantcopyRock);
 
@@ -471,6 +476,10 @@ public class GeneratePlanet : MonoBehaviour
         MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 
         plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.1f, 0.4f);
+        plantcopy.GetComponent<Planet>().Health =Complexity;
+        plantcopy.GetComponent<Planet>().MaxHealth = Complexity;
+        plantcopy.GetComponent<Planet>().StartRockSize = plantcopy.transform.localScale.x * 1.4f;
+
 
         OneGeneratePlanet();
 

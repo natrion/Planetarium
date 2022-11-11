@@ -14,8 +14,11 @@ public class Planet : MonoBehaviour
     void FixedUpdate()
     {
         if (Player.pouse == true)
-        {          
-            transform.eulerAngles += new Vector3(0, 0.01f, 0);           
+        {
+            if (PlanetComplexity != 0)
+            {
+                transform.eulerAngles += new Vector3(0, 0.01f, 0);
+            }                
         }
     }
 }

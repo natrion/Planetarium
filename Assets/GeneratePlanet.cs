@@ -295,6 +295,12 @@ public class GeneratePlanet : MonoBehaviour
     }
     void Start()
     {
+        ///////////////////////////////////////////////Generate Actual Planet
+        //plantcopy = Instantiate(PlanetCanvas);
+
+        //OneGeneratePlanet();
+        ///////////////////////////////////////////////////////////////////////
+        
         int PlanetNumber = Random.Range(0, 10);
         
         PlanetsPositions = new Vector3[PlanetNumber];

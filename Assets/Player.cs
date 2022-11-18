@@ -41,8 +41,17 @@ public class Player : MonoBehaviour
             {
                 if (hit.collider.gameObject.CompareTag("Rock"))
                 {
-                    hit.collider.GetComponent<Planet>().Health -= Damage;
+                    hit.collider.GetComponent<Planet>().HealthToNewOre -= Damage;
+                    if (0 > hit.collider.GetComponent<Planet>().HealthToNewOre)
+                    {
+                        GameObject ore = Instantiate(hit.collider.GetComponent<Planet>().Ore);
+                        ore.transform.position = hit.point;
+                        ore.transform.parent = transform.parent;
+                        hit.collider.GetComponent<Planet>().HealthToNewOre = hit.collider.GetComponent<Planet>().MaxHealthToNewOre;
+                    }
 
+                    hit.collider.GetComponent<Planet>().Health -= Damage;
+                    
                     float health = hit.collider.GetComponent<Planet>().Health;
                     float maxHealth = hit.collider.GetComponent<Planet>().MaxHealth;
                     float StartRockSize = hit.collider.GetComponent<Planet>().StartRockSize;
@@ -52,6 +61,10 @@ public class Player : MonoBehaviour
                     if (2 > health)
                     {
                         Destroy(hit.collider.gameObject);
+
+                        //GameObject ore = Instantiate(hit.collider.GetComponent<Planet>().Ore);
+                        //ore.transform = hit.Position;
+                        //hit.collider.GetComponent<Planet>().HealthToNewOre = hit.collider.GetComponent<Planet>().MaxHealthToNewOre;
                     }
                     
                 }

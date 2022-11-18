@@ -3,7 +3,12 @@ guid: 7354eeaff21198444ba25e1241e8a348
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - OreFolder: {fileID: 3459706826251671543, guid: b0dd69302db2e5346a6e543a7f86ce17,
+      type: 3}
+  - playerScript: {instanceID: 0}
+  - PlanetCanvas: {instanceID: 0}
+  - sunMaterial: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

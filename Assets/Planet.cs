@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
+    
     public float PlanetComplexity;
     public float Intensity;
 
+    public GameObject Ore;
     public float Health;
     public float MaxHealth;
     public float StartRockSize;
+    public float MaxHealthToNewOre;
+    public float HealthToNewOre;
 
     void FixedUpdate()
     {

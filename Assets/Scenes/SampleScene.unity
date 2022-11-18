@@ -199,6 +199,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7354eeaff21198444ba25e1241e8a348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1219136285}
+  OreFolder: {fileID: 3459706826251671543, guid: b0dd69302db2e5346a6e543a7f86ce17,
+    type: 3}
   playerScript: {fileID: 1219136287}
   Complexity: 20
   PerlinoiseIntensity: 10
@@ -747,7 +750,7 @@ Rigidbody:
   m_GameObject: {fileID: 1219136280}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -811,7 +814,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219136280}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 788.60156, y: 34.735073, z: 2260.8062}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -819,7 +822,7 @@ Transform:
   - {fileID: 963194228}
   m_Father: {fileID: 1936464910}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!135 &1219136286
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -845,11 +848,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda6363fd6da7b5408532cf033c6a367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 0.03
+  Damage: 0.005
   Camera: {fileID: 963194225}
   sensitivity: 300
   speed: 5
-  Gravitystrenght: 0.5
+  Gravitystrenght: 0.25
   planetCamerashiftDistance: 375
   PouseMenu: {fileID: 142487734}
   PlayerFolder: {fileID: 1936464910}

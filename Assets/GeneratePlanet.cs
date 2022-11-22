@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class GeneratePlanet : MonoBehaviour
 {
+    public int textureSize;
     public Transform player;
     public GameObject OreFolder;
     private bool s;
@@ -271,9 +272,20 @@ public class GeneratePlanet : MonoBehaviour
         //}
         for (int k = 0; k < vertices.Length; k ++)
         {
-            int U = (k + 1)  % Complexity;
-            int Y = (k + 1) / Complexity;
-            uvs[k] =  new Vector2( U % 2 ,Y % 2);
+
+            int U = ((k )  % Complexity) % (textureSize * 2);
+            int Y = ((k ) / Complexity) % (textureSize * 2);
+            if (U > textureSize)
+            {
+                U = textureSize - (((k) % Complexity) % (textureSize * 2) - textureSize);
+            }
+            if (Y > textureSize)
+            {
+                Y = textureSize - (((k) / Complexity) % (textureSize * 2) - textureSize);
+            }
+
+            uvs[k] = new Vector2((float)U / textureSize, (float)Y / textureSize); 
+            
         }
 
 
@@ -339,9 +351,10 @@ public class GeneratePlanet : MonoBehaviour
         snowHight = 0.1f;
 
         Light StarLight = plantcopy.AddComponent(typeof(Light)) as Light;
-        StarLight.range = Random.Range(1000,1500) * plantcopy.transform.localScale.x * 4;
-        StarLight.intensity = plantcopy.transform.localScale.x / Random.Range(0f, 2f) * 10000000;
+        StarLight.range =   plantcopy.transform.localScale.x * 4800;
+        StarLight.intensity =   plantcopy.transform.localScale.x * 20000000;
         StarLight.color = PlanetColor;
+        StarLight.shadows = LightShadows.Hard;
 
         plantcopy.GetComponent<MeshRenderer>().material = sunMaterial ;
 
@@ -349,7 +362,7 @@ public class GeneratePlanet : MonoBehaviour
         
 
         plantcopy.transform.eulerAngles = new Vector3(90, 0, 0);
-        plantcopy.GetComponent<Planet>().PlanetComplexity = Complexity;
+        plantcopy.GetComponent<ThingData>().PlanetComplexity = Complexity;
 
         OneGeneratePlanet();
 
@@ -361,7 +374,7 @@ public class GeneratePlanet : MonoBehaviour
             PlanetsPositions[i] = plantcopy.transform.position;
             if (i == 0)
             {
-                player.position = plantcopy.transform.position + new Vector3(0, plantcopy.GetComponent<Planet>().PlanetComplexity / 2, 0);
+                player.position = plantcopy.transform.position + new Vector3(0, plantcopy.GetComponent<ThingData>().PlanetComplexity / 3, 0);
             }
             if (Complexity > 250)
             {
@@ -458,15 +471,15 @@ public class GeneratePlanet : MonoBehaviour
         MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 
         plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.05f, 0.2f);
-        plantcopy.GetComponent<Planet>().Health = Complexity;
-        plantcopy.GetComponent<Planet>().MaxHealth = Complexity;
+        plantcopy.GetComponent<ThingData>().Health = Complexity;
+        plantcopy.GetComponent<ThingData>().MaxHealth = Complexity;
 
-        plantcopy.GetComponent<Planet>().StartRockSize = plantcopy.transform.localScale.x * 2.8f;
+        plantcopy.GetComponent<ThingData>().StartRockSize = plantcopy.transform.localScale.x * 2.8f;
 
-        plantcopy.GetComponent<Planet>().Ore = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;
+        plantcopy.GetComponent<ThingData>().Ore = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;
 
-        plantcopy.GetComponent<Planet>().MaxHealthToNewOre = Random.Range(3f, 6f); ;
-        plantcopy.GetComponent<Planet>().HealthToNewOre = plantcopy.GetComponent<Planet>().MaxHealthToNewOre;
+        plantcopy.GetComponent<ThingData>().MaxHealthToNewOre = Random.Range(2f, 5f); ;
+        plantcopy.GetComponent<ThingData>().HealthToNewOre = plantcopy.GetComponent<ThingData>().MaxHealthToNewOre;
         OneGeneratePlanet();
 
         
@@ -499,15 +512,15 @@ public class GeneratePlanet : MonoBehaviour
         MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 
         plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.05f, 0.2f);
-        plantcopy.GetComponent<Planet>().Health =Complexity;
-        plantcopy.GetComponent<Planet>().MaxHealth = Complexity;
+        plantcopy.GetComponent<ThingData>().Health =Complexity;
+        plantcopy.GetComponent<ThingData>().MaxHealth = Complexity;
 
-        plantcopy.GetComponent<Planet>().StartRockSize = plantcopy.transform.localScale.x *2.8f ;
+        plantcopy.GetComponent<ThingData>().StartRockSize = plantcopy.transform.localScale.x *2.8f ;
 
-        plantcopy.GetComponent<Planet>().Ore = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;
+        plantcopy.GetComponent<ThingData>().Ore = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;
 
-        plantcopy.GetComponent<Planet>().MaxHealthToNewOre = Random.Range(3f, 6f); ;
-        plantcopy.GetComponent<Planet>().HealthToNewOre = plantcopy.GetComponent<Planet>().MaxHealthToNewOre;
+        plantcopy.GetComponent<ThingData>().MaxHealthToNewOre = Random.Range(2f, 5f); 
+        plantcopy.GetComponent<ThingData>().HealthToNewOre = plantcopy.GetComponent<ThingData>().MaxHealthToNewOre;
 
 
         OneGeneratePlanet();
@@ -550,12 +563,13 @@ public class GeneratePlanet : MonoBehaviour
         PerlinoiseIntensity = Random.Range(3f, 13f);
         PerlinoiseIntensity2 = Random.Range(7f, 13f);
         PerlinoiseIntensity3 = Random.Range(2f / ((float)Complexity / 1100), 8f / ((float)Complexity / 1100));
-        PerlinoiseDestortion = Random.Range(0.1f, 0.9f);
-        PerlinoiseDestortion2 = Random.Range(1.25f, 3.75f);
-        PerlinoiseDestortion3 = Random.Range(2.5f * ((float)Complexity / 1100), 7.5f * ((float)Complexity / 1100));
+
+        PerlinoiseDestortion = Random.Range(0.05f, 0.9f);
+        PerlinoiseDestortion2 = Random.Range(0.5f, 3.75f);
+        PerlinoiseDestortion3 = Random.Range(0.75f * ((float)Complexity / 1100), 7.5f * ((float)Complexity / 1100));
 
         TerrainDestortion = Random.Range(70f * ((float)Complexity / 1100), 100f * ((float)Complexity / 1100));
-        TerrainIntensity = Random.Range(0.025f / ((float)Complexity / 1100), 0.05f / ((float)Complexity / 1100));
+        TerrainIntensity = Random.Range(0.01f / ((float)Complexity / 1100), 0.025f / ((float)Complexity / 1100));
 
         //DegenerativePerlinNoiseDestortion = Random.Range(14f * ((float)Complexity / 1100), 20f * ((float)Complexity / 1100));
         //DegenerativePerlinNoiseIntensity = Random.Range(1f / ((float)Complexity / 1100), 1f / ((float)Complexity / 1100));
@@ -580,9 +594,18 @@ public class GeneratePlanet : MonoBehaviour
         OneGeneratePlanet();
 
         plantcopy.transform.eulerAngles = new Vector3(90, 0, 0);
-        plantcopy.GetComponent<Planet>().PlanetComplexity = Complexity;
+        plantcopy.GetComponent<ThingData>().PlanetComplexity = Complexity;
 
-        plantcopy.GetComponent<Planet>().Intensity = PerlinoiseIntensity * PerlinoiseIntensity2 * PerlinoiseIntensity3 + TerrainIntensity;
+        plantcopy.GetComponent<ThingData>().Intensity = PerlinoiseIntensity * PerlinoiseIntensity2 * PerlinoiseIntensity3 + TerrainIntensity;
+
+        plantcopy.GetComponent<ThingData>().PlanetOre1 = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;
+        plantcopy.GetComponent<ThingData>().PlanetOre2 = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;
+
+        plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre1 = Random.Range(15f, 30f);
+        plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre2 = Random.Range(15f, 30f);
+        plantcopy.GetComponent<ThingData>().HealthToNewOre1 = plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre1;
+        plantcopy.GetComponent<ThingData>().HealthToNewOre2 = plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre2;
+
     }
 
     

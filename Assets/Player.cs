@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     public float Damage;
-    public static bool pouse = false;
+    public static bool pouse = true;
+    public static bool OnInventory = true;
     public GameObject Camera;
     public float sensitivity;
     public float speed;
@@ -16,6 +18,7 @@ public class Player : MonoBehaviour
     private GameObject planetGameObject;
     private float YRotation;
     public GameObject PouseMenu;
+    public GameObject InventoriMenu;
     public Transform PlayerFolder;
 
     [DllImport("user32.dll")]
@@ -23,54 +26,120 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        pouse = false;
+        pouse = true;
+        OnInventory = true;
         //SetCursorPos(-1, -1);
         Cursor.visible = false;
         PouseMenu.SetActive(false);
+        InventoriMenu.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
     }
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) & Time.timeScale != 0)
         {
             RaycastHit hit ;
             Ray ray = new Ray(Camera.transform.position, Camera.transform.forward);
 
             if (Physics.Raycast(ray, out hit , 50f))
-            {
-                if (hit.collider.gameObject.CompareTag("Rock"))
+            { 
+                if (hit.collider.gameObject.CompareTag("Rock")  )
                 {
-                    hit.collider.GetComponent<Planet>().HealthToNewOre -= Damage;
-                    if (0 > hit.collider.GetComponent<Planet>().HealthToNewOre)
+                    hit.collider.GetComponent<ThingData>().HealthToNewOre -= Damage;
+                    if (0 > hit.collider.GetComponent<ThingData>().HealthToNewOre)
                     {
-                        GameObject ore = Instantiate(hit.collider.GetComponent<Planet>().Ore);
-                        ore.transform.position = hit.point;
+                        GameObject ore = Instantiate(hit.collider.GetComponent<ThingData>().Ore);                       
+                        ore.transform.position = hit.point;                                  
                         ore.transform.parent = transform.parent;
-                        hit.collider.GetComponent<Planet>().HealthToNewOre = hit.collider.GetComponent<Planet>().MaxHealthToNewOre;
+                        hit.collider.GetComponent<ThingData>().HealthToNewOre = hit.collider.GetComponent<ThingData>().MaxHealthToNewOre;
                     }
 
-                    hit.collider.GetComponent<Planet>().Health -= Damage;
+                    hit.collider.GetComponent<ThingData>().Health -= Damage;
                     
-                    float health = hit.collider.GetComponent<Planet>().Health;
-                    float maxHealth = hit.collider.GetComponent<Planet>().MaxHealth;
-                    float StartRockSize = hit.collider.GetComponent<Planet>().StartRockSize;
+                    float health = hit.collider.GetComponent<ThingData>().Health;
+                    float maxHealth = hit.collider.GetComponent<ThingData>().MaxHealth;
+                    float StartRockSize = hit.collider.GetComponent<ThingData>().StartRockSize;
 
                     hit.collider.transform.localScale = new Vector3(1, 1, 1) * (health / maxHealth * StartRockSize);
 
                     if (2 > health)
                     {
                         Destroy(hit.collider.gameObject);
-
-                        //GameObject ore = Instantiate(hit.collider.GetComponent<Planet>().Ore);
-                        //ore.transform = hit.Position;
-                        //hit.collider.GetComponent<Planet>().HealthToNewOre = hit.collider.GetComponent<Planet>().MaxHealthToNewOre;
                     }
-                    
+
                 }
+                else if (hit.collider.gameObject.CompareTag("Planet"))
+                {
+                    /////taking health from planet to spawn ore
+                    hit.collider.GetComponent<ThingData>().HealthToNewOre1 -= Damage;
+                    hit.collider.GetComponent<ThingData>().HealthToNewOre2 -= Damage;
+                    ///////////////////////////////////////////////SpawningOre1
+                    if (0 > hit.collider.GetComponent<ThingData>().HealthToNewOre1)
+                    {
+                        GameObject ore1 = Instantiate(hit.collider.GetComponent<ThingData>().PlanetOre1);
+
+                        Vector3 direction = (  transform.position - transform.parent.position).normalized;
+                        ore1.transform.position = new Vector3(hit.point.x + direction.x,
+                                                              hit.point.y + direction.y,
+                                                              hit.point.z + direction.z);
+                        ore1.transform.parent = transform.parent;
+                        hit.collider.GetComponent<ThingData>().HealthToNewOre1 = hit.collider.GetComponent<ThingData>().PlanetMaxHealthToNewOre1;
+                    }
+                    ///////////////////////////////////////////////SpawningOre1
+                    if (0 > hit.collider.GetComponent<ThingData>().HealthToNewOre2)
+                    {
+                        GameObject ore2 = Instantiate(hit.collider.GetComponent<ThingData>().PlanetOre2);
+
+                        Vector3 direction = (transform.position - transform.parent.position).normalized;
+                        ore2.transform.position = new Vector3(hit.point.x + direction.x,
+                                                              hit.point.y + direction.y,
+                                                              hit.point.z + direction.z);
+                        ore2.transform.parent = transform.parent;
+                        hit.collider.GetComponent<ThingData>().HealthToNewOre2 = hit.collider.GetComponent<ThingData>().PlanetMaxHealthToNewOre2;
+                    }
+                }
+                
             }
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetMouseButtonDown(0) & Time.timeScale != 0)
+        {
+            RaycastHit hit;
+            Ray ray = new Ray(Camera.transform.position, Camera.transform.forward);
+            if ( Physics.Raycast(ray, out hit, 50f))
+            {
+                if (hit.collider.gameObject.CompareTag("Ore"))
+                {
+                    Destroy(hit.collider.gameObject);
+
+                    bool FoundSamePanel = false;
+                    for (int OnChild = 0; OnChild < InventoriMenu.transform.childCount; OnChild++)
+                    {
+                        Transform Child = InventoriMenu.transform.GetChild(OnChild);
+                        if (Child.GetComponent<ThingData>().OreType == hit.collider.GetComponent<ThingData>().OreUI.GetComponent<ThingData>().OreType)
+                        {
+                            FoundSamePanel = true;
+                            Child.GetComponent<ThingData>().AmountOfOres += hit.collider.GetComponent<ThingData>().OreAmountInrock;
+                            string StringOfAmountOfOres = Child.GetComponent<ThingData>().AmountOfOres.ToString();
+                            Child.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StringOfAmountOfOres;
+                        }    
+
+                    }
+
+                    if (FoundSamePanel == false)
+                    {
+                        GameObject OreUI = Instantiate(hit.collider.GetComponent<ThingData>().OreUI);
+                        OreUI.transform.SetParent(InventoriMenu.transform);
+                    }
+                }
+            }
+            
+        }
+
+        
+        if (Input.GetKeyDown(KeyCode.Escape) & OnInventory == true)
         {
             if (pouse == false)
             {
@@ -89,6 +158,25 @@ public class Player : MonoBehaviour
                 Time.timeScale = 0;
             }
         }
+        if (Input.GetKeyDown(KeyCode.Tab) & pouse == true)
+        {
+            if (OnInventory == false)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                OnInventory = true;
+                InventoriMenu.SetActive(false);
+                Time.timeScale = 1;
+            }
+            else
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                OnInventory = false;
+                InventoriMenu.SetActive(true);
+                Time.timeScale = 0;
+            }
+        }
 
     }
 
@@ -99,7 +187,7 @@ public class Player : MonoBehaviour
             
             //Camera.transform.position = transform.position;
             
-            float ComplexityOfPlanet = other.GetComponent<Planet>().PlanetComplexity * other.transform.localScale.x;
+            float ComplexityOfPlanet = other.GetComponent<ThingData>().PlanetComplexity * other.transform.localScale.x;
             float distance = Mathf.Abs(other.transform.position.x - transform.position.x) + Mathf.Abs(other.transform.position.y - transform.position.y) + Mathf.Abs(other.transform.position.z - transform.position.z);
             Vector3 direction = (other.transform.position - transform.position).normalized;
 
@@ -117,7 +205,7 @@ public class Player : MonoBehaviour
             }
             
 
-            if (distance < ComplexityOfPlanet + (other.GetComponent<Planet>().Intensity / 100) / 2.5f)
+            if (distance < ComplexityOfPlanet + (other.GetComponent<ThingData>().Intensity / 100) / 2.5f)
             {
                 if (Onplanet == false)
                 {

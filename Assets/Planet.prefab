@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7599360788587802900}
   - component: {fileID: 1161237913733558742}
   - component: {fileID: 4085586551751375617}
-  - component: {fileID: 2835486474933140731}
+  - component: {fileID: 6367320259501927378}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Planet
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2835486474933140731
+--- !u!114 &6367320259501927378
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,6 +98,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlanetComplexity: 0
   Intensity: 0
+  PlanetOre1: {fileID: 0}
+  PlanetOre2: {fileID: 0}
+  PlanetMaxHealthToNewOre1: 0
+  PlanetMaxHealthToNewOre2: 0
+  HealthToNewOre1: 0
+  HealthToNewOre2: 0
   Ore: {fileID: 0}
   Health: 0
   MaxHealth: 0

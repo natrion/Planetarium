@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class GeneratePlanet : MonoBehaviour
 {
+    public Material[] materials;
     public int textureSize;
     public Transform player;
     public GameObject OreFolder;
@@ -383,14 +384,14 @@ public class GeneratePlanet : MonoBehaviour
                 GameObject Bigplantcopy = plantcopy;
                 for (int g = 0; g < MoonNumber; g++)
                 {
-                    GenerateParametersForPlanet((float)Complexity / 1.5f , false);
+                    GenerateParametersForPlanet((float)Complexity / 2 , false);
                     plantcopy.transform.parent = Bigplantcopy.transform;
                     float a;
                     if (Random.Range(-1, 2) == 1) { a = 1; } else { a = -1; }
                     float b;
                     if (Random.Range(-1, 2) == 1) { b = 1; } else { b = -1; }
 
-                    plantcopy.transform.position = new Vector3(Random.Range(1000, 3000) * a + Bigplantcopy.transform.position.x, 0, Random.Range(1000, 3000) * b + Bigplantcopy.transform.position.z);
+                    plantcopy.transform.position = new Vector3(Random.Range(500, 1000) * a + Bigplantcopy.transform.position.x, 0, Random.Range(500, 1000) * b + Bigplantcopy.transform.position.z);
 
                     
                 }
@@ -587,8 +588,8 @@ public class GeneratePlanet : MonoBehaviour
         PerlinoiseIntensityRock = Random.Range(2800, 6000);
         PerlinoiseIntensityRock2 = Random.Range(800, 1600);
 
+        plantcopy.GetComponent<MeshRenderer>().material = materials[Random.Range(0, 6)];
 
-        
         //Complexity = 1050;
 
         OneGeneratePlanet();

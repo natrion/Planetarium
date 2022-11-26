@@ -130,8 +130,13 @@ public class Player : MonoBehaviour
 
                     if (FoundSamePanel == false)
                     {
+                        
                         GameObject OreUI = Instantiate(hit.collider.GetComponent<ThingData>().OreUI);
                         OreUI.transform.SetParent(InventoriMenu.transform);
+
+                        OreUI.GetComponent<ThingData>().AmountOfOres = hit.collider.GetComponent<ThingData>().OreAmountInrock;
+                        string StringOfAmountOfOres = OreUI.GetComponent<ThingData>().AmountOfOres.ToString();
+                        OreUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StringOfAmountOfOres;
                     }
                 }
             }
@@ -205,7 +210,7 @@ public class Player : MonoBehaviour
             }
             
 
-            if (distance < ComplexityOfPlanet + (other.GetComponent<ThingData>().Intensity / 100) / 2.5f)
+            if (distance < (ComplexityOfPlanet + (other.GetComponent<ThingData>().Intensity / 200)) / 1.5f)
             {
                 if (Onplanet == false)
                 {

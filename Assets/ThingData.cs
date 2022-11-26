@@ -5,6 +5,10 @@ using UnityEngine;
 public class ThingData : MonoBehaviour
 {
     
+    public GameObject ObjectPlayer;
+    /// <RandomData>
+    /// ////////////////////////////////////////////////
+    /// <PlanetData>
     public float PlanetComplexity;
     public float Intensity;
 
@@ -31,8 +35,10 @@ public class ThingData : MonoBehaviour
     /// <OreData>
     /// /////////////////////
     /// <OreUI>
-    public float AmountOfOres;
+    public int AmountOfOresToDelete;
+    public int AmountOfOres;
     public string OreType;
+    public int OreNumber;
     /// <OreUI>
     /// /////////////////////
     /// <PlanetRotating>

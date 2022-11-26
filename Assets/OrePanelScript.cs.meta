@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b9235aeb18450f84881aa679d62826b6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - OreFolder: {fileID: 3459706826251671543, guid: b0dd69302db2e5346a6e543a7f86ce17,
+      type: 3}
+  - m_DestroyText: {fileID: 8427849425703920322, guid: 45fcfdd895f9d424d8373f3c45d8ebea,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

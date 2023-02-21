@@ -49,7 +49,10 @@ public class GeneratePlanet : MonoBehaviour
     public Color BiomColor;
     public float BiomColorIntensity;
     public float BiomGenerateHight;
+
     public GameObject PlanetCanvas;
+    public GameObject starCanvas;
+
     private GameObject plantcopy;
     private GameObject plantcopyRock;
     public float PerlinoiseIntensityRock;
@@ -60,6 +63,7 @@ public class GeneratePlanet : MonoBehaviour
     public bool generateRock;
     public Material sunMaterial;
     private Vector3[] PlanetsPositions;
+
     void OneGeneratePlanet()
     {
         
@@ -75,9 +79,12 @@ public class GeneratePlanet : MonoBehaviour
         float r1 = (0.3f * Complexity);
         float z = 0f;
         a2 = 0;
-        for (int i = 0; i < Complexity+1; i++)
+        for (int i = 0; i < Complexity+ 1; i++)
         {
-
+            if (2 * r1 * z - z * z <0)
+            {
+                print("s");
+            }
             float r = Mathf.Sqrt(2 * r1 * z - z * z);
             
             for (int d = 0; d < Complexity; d++)
@@ -94,9 +101,13 @@ public class GeneratePlanet : MonoBehaviour
 
                 float aPerlin  =  a ;
 
-                float PerlinNoyse1 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion) * (PerlinoiseIntensity / 10);
-                float PerlinNoyse2 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion2, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion2) * (PerlinoiseIntensity2 / 10);
-                float PerlinNoyse3 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion3, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion3) * (PerlinoiseIntensity3 / 10);
+                //float ZbetweenOne = (float)i / ((float)Complexity);
+                //float ZCalculated = Mathf.Abs(Mathf.Abs((ZbetweenOne * 2) - 1) - 1);
+                //print(ZCalculated + "= ZCalculated");
+
+                float PerlinNoyse1 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion , (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion ) * (PerlinoiseIntensity / 10);
+                float PerlinNoyse2 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion2 , (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion2 ) * (PerlinoiseIntensity2 / 10);
+                float PerlinNoyse3 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortion3 , (aPerlin - (aPerlin * 2)) * PerlinoiseDestortion3 ) * (PerlinoiseIntensity3 / 10);
                 float Terrein = Mathf.PerlinNoise((a2 - (a2 * 2)) * TerrainDestortion, (aPerlin - (aPerlin * 2)) * TerrainDestortion) * (TerrainIntensity / 10);
                 //float DegenerativePerlinNoise = Mathf.PerlinNoise((a2 - (a2 * 2)) * DegenerativePerlinNoiseDestortion, (aPerlin - (aPerlin * 2)) * DegenerativePerlinNoiseDestortion) * (DegenerativePerlinNoiseIntensity / 10);
 
@@ -135,7 +146,7 @@ public class GeneratePlanet : MonoBehaviour
                 vertices[i * Complexity + d ] = new Vector3(x + x *PerlinNoyse, y +  y *PerlinNoyse, (z - r1) +  (z- r1 )* PerlinNoyse  );
 
 
-
+                
 
 
 
@@ -228,7 +239,10 @@ public class GeneratePlanet : MonoBehaviour
                 //colors[i * Complexity + d] = new Color(1 + PlanetColor.r / ((maxPerlinNoyse-PerlinNoyse) / whitness), 1 + PlanetColor.g  / ((maxPerlinNoyse - PerlinNoyse) / whitness), 1 + PlanetColor.b / ((maxPerlinNoyse - PerlinNoyse) / whitness), PlanetColor.a);
                 //vertices[i * Complexity + d + howManyPointsHad] = new Vector3(i* VertexSpacing - size / 2  , d* VertexSpacing - size / 2 , 0 );
                 howManyPoints = i * Complexity + d;
-
+                if (i * Complexity + d == 15300)
+                {
+                    print("Bug");
+                }
             }
             PerlinNoisewas = 1;
             if (r !=0 )
@@ -241,8 +255,27 @@ public class GeneratePlanet : MonoBehaviour
             }
             
             a = 0;
-            z += (2 * r1 / Complexity);
-            // z = (Mathf.Sin(Mathf.PI / Complexity * i - Mathf.PI / 2) + 1) * (2 * r1 / Complexity) * i;
+
+            // if ( i < 2)
+            // {
+            //     z += (2 * r1 / Complexity /2);
+            // } else if (i > Complexity -2)
+            // {
+            //    z += (2 * r1 / Complexity / 2);
+            // } else
+            //S {
+
+            //}
+            
+
+            float IbetweenOne = (float)i / ((float)Complexity ) ;
+            float ICalculated = Mathf.Abs(Mathf.Abs((IbetweenOne*2)-1)-1);
+            z += ICalculated* 1.2f;
+
+            //z += (2 * r1 / Complexity);
+
+            //z = (Mathf.Sin(Mathf.PI / Complexity * i - Mathf.PI / 2) + 1) * (2 * r1 / Complexity) * i;
+
 
         }
 
@@ -320,9 +353,9 @@ public class GeneratePlanet : MonoBehaviour
 
         //OneGeneratePlanet();
         ///////////////////////////////////////////////////////////////////////
-        
-        int PlanetNumber = Random.Range(0, 10);
-        
+
+        int PlanetNumber = Random.Range(1, 1);
+
         PlanetsPositions = new Vector3[PlanetNumber];
 
 
@@ -332,11 +365,11 @@ public class GeneratePlanet : MonoBehaviour
 
         generateRock = false;
 
-        plantcopy = Instantiate(PlanetCanvas);
+        plantcopy = Instantiate(starCanvas);
         plantcopy.transform.parent = transform;
 
         Complexity = 150;
-        
+
         PerlinoiseIntensity = 0;
         PerlinoiseIntensity2 = 0;
         PerlinoiseIntensity3 = 0;
@@ -351,11 +384,11 @@ public class GeneratePlanet : MonoBehaviour
         TerrainIntensity = Random.Range(0, 0.2f);
         snowHight = 0.1f;
 
-        Light StarLight = plantcopy.AddComponent(typeof(Light)) as Light;
-        StarLight.range =   plantcopy.transform.localScale.x * 4800;
-        StarLight.intensity =   plantcopy.transform.localScale.x * 20000000;
+        Light StarLight = plantcopy.transform.GetChild(0).GetComponent<Light>();
+        //StarLight.range =   plantcopy.transform.localScale.x * 4800;
+        StarLight.intensity =   plantcopy.transform.localScale.x /10 ;
         StarLight.color = PlanetColor;
-        StarLight.shadows = LightShadows.Hard;
+        //StarLight.shadows = LightShadows.Hard;
 
         plantcopy.GetComponent<MeshRenderer>().material = sunMaterial ;
 
@@ -380,7 +413,7 @@ public class GeneratePlanet : MonoBehaviour
             if (Complexity > 250)
             {
                 float MoonNumber = Random.Range(0, 5 * ((float)Complexity / 1200 * 2 ));
-
+                
                 GameObject Bigplantcopy = plantcopy;
                 for (int g = 0; g < MoonNumber; g++)
                 {

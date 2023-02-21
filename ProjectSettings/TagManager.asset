@@ -8,6 +8,7 @@ TagManager:
   - Rock
   - Ore
   - OrePanel
+  - star light
   layers:
   - Default
   - TransparentFX

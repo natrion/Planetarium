@@ -6,6 +6,9 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    
+    /// //////////////////////////////////////////////////////
+    /// <Seting Variables>
     public float Damage;
     public static bool pouse = true;
     public static bool OnInventory = true;
@@ -26,6 +29,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        /// //////////////////////////////////////////////////////
+        /// <Seting Variables On Start>
         pouse = true;
         OnInventory = true;
         //SetCursorPos(-1, -1);
@@ -143,7 +148,8 @@ public class Player : MonoBehaviour
             
         }
 
-        
+        /// //////////////////////////////////////////////////////
+        /// <Opening Escape Menu>
         if (Input.GetKeyDown(KeyCode.Escape) & OnInventory == true)
         {
             if (pouse == false)
@@ -163,6 +169,8 @@ public class Player : MonoBehaviour
                 Time.timeScale = 0;
             }
         }
+        /// //////////////////////////////////////////////////////
+        /// <Opening Inventori>
         if (Input.GetKeyDown(KeyCode.Tab) & pouse == true)
         {
             if (OnInventory == false)
@@ -187,35 +195,42 @@ public class Player : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
+        /// //////////////////////////////////////////////////////
+        /// <Gravity Simulation>
         if (other.gameObject.CompareTag("Planet"))
         {
             
             //Camera.transform.position = transform.position;
             
+            /////////////seting variables from script storage for caculating gravity
             float ComplexityOfPlanet = other.GetComponent<ThingData>().PlanetComplexity * other.transform.localScale.x;
             float distance = Mathf.Abs(other.transform.position.x - transform.position.x) + Mathf.Abs(other.transform.position.y - transform.position.y) + Mathf.Abs(other.transform.position.z - transform.position.z);
             Vector3 direction = (other.transform.position - transform.position).normalized;
-
+            /////////////sun Gravity
             if (other.transform.localScale.x == 0.7f)
             {
                 transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / Mathf.Sqrt(distance) * Gravitystrenght));
             }
+            /////////////planet gravity
             else
             {
-                if (distance < ComplexityOfPlanet)
+                if (distance < ComplexityOfPlanet)////gravity works for some distance
                 {
                     transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / Mathf.Sqrt(distance) * Gravitystrenght));
                 }
                 
             }
             
-
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////going off on planet
             if (distance < (ComplexityOfPlanet + (other.GetComponent<ThingData>().Intensity / 200)) / 1.5f)
             {
+                /////////////////////////going on planet
                 if (Onplanet == false)
                 {
+                    ////player camera chanig to planet mode
                     Camera.transform.localEulerAngles = Camera.transform.up;
                     transform.parent = other.transform;
+                    ////showing rocks
                     for (int i = 0; i < other.transform.childCount; i++)
                     {
                         if (!other.transform.GetChild(i).gameObject.CompareTag("Planet"))
@@ -234,14 +249,16 @@ public class Player : MonoBehaviour
             }
             else
             {
-
+                /////////////////////////going of planet
                 if (planetGameObject== other.gameObject)
                 {
                     if (Onplanet == true)
                     {
+                        ///player camera chanig space mode
                         transform.eulerAngles = new Vector3(0, 0, 0);
                         Camera.transform.eulerAngles = new Vector3(0, 0, 0);
                         transform.parent = PlayerFolder;
+                        ////hiding rocks
                         for (int i = 0; i < other.transform.childCount; i++)
                         {
                             if (!other.transform.GetChild(i).gameObject.CompareTag("Planet"))
@@ -260,21 +277,26 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        ///////////seting speed of player
         speed += speed * Input.GetAxis("Mouse ScrollWheel") / 2;
 
+        ///////getting keyboard movemant
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         float up = System.Convert.ToInt32(Input.GetKey(KeyCode.Space)) + System.Convert.ToInt32(Input.GetKey(KeyCode.LeftShift)) * -1;
 
+        /////////////moving player
         transform.GetComponent<Rigidbody>().AddForce(Camera.transform.right * speed * h );
         transform.GetComponent<Rigidbody>().AddForce(Camera.transform.forward * speed * v);
         transform.GetComponent<Rigidbody>().AddForce(Camera.transform.up * speed * up);
 
         //Camera.transform.position = transform.position;
 
+        ///////getting mouse movemant
         float mY = Input.GetAxis("Mouse Y");
         float mX = Input.GetAxis("Mouse X");
 
+        //////////////////////////////rotating camera in space
         if (Onplanet == false)
         {
             transform.eulerAngles += new Vector3(0, mX * sensitivity / 50, 0);
@@ -285,7 +307,7 @@ public class Player : MonoBehaviour
 
 
         }
-        else
+        else//////////////////////////////rotating camera on planet
         {
             //Vector3 planetPositionDiference = new Vector3(planetPosition.x - transform.position.x, planetPosition.y - transform.position.y, planetPosition.z - transform.position.z);
             //float floatplanetPositionDiference = planetPositionDiference.x + planetPositionDiference.y + planetPositionDiference.z;

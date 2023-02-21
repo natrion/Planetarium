@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ThingData : MonoBehaviour
 {
-    
+    public Transform PlayerCamera ;
     public GameObject ObjectPlayer;
     /// <RandomData>
     /// ////////////////////////////////////////////////
@@ -42,15 +42,33 @@ public class ThingData : MonoBehaviour
     /// <OreUI>
     /// /////////////////////
     /// <PlanetRotating>
-    /// 
+ 
+    void Start()
+    {
+        PlayerCamera = transform.parent.parent.GetChild(0).GetChild(0);
+    }
     void FixedUpdate()
     {
-        if (Player.pouse == true & Player.OnInventory == true)
+        if (Player.pouse == true & Player.OnInventory == true)////if game is not pouse
         {
-            if (PlanetComplexity != 0)
+            if (PlanetComplexity != 0)/////finding  if it is not a rock
             {
                 transform.eulerAngles += new Vector3(0, 0.01f, 0);
-            }                
+            }
+            /// <PlanetRotating>
+            /// /////////////////////
+            /// <star light>     
+            if (transform.childCount != 0)
+            {
+                GameObject star_light = transform.GetChild(0).gameObject;
+                if (star_light.CompareTag("star light"))
+                {
+                    star_light.transform.LookAt(PlayerCamera);
+                    //Vector3 direction = (star_light.transform.position - PlayerCamera.position).normalized;
+                    //star_light.transform.eulerAngles = direction;
+                }
+            }
         }
+
     }
 }

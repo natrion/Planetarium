@@ -12,7 +12,7 @@ public class GravityScript : MonoBehaviour
         if (transform.parent.gameObject.name != "PlayerFolder")
         {           
             float ComplexityOfPlanet = parent.GetComponent<ThingData>().PlanetComplexity * parent.transform.localScale.x;
-            float distance = Mathf.Abs(parent.position.x - transform.position.x) + Mathf.Abs(parent.position.y - transform.position.y) + Mathf.Abs(parent.position.z - transform.position.z);
+            float distance = Vector3.Distance(parent.transform.position, transform.position);
             Vector3 direction = (parent.position - transform.position).normalized;
 
             transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / Mathf.Sqrt(distance) * Gravitystrenght * gameObject.GetComponent<Rigidbody>().mass));

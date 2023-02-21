@@ -386,7 +386,7 @@ public class GeneratePlanet : MonoBehaviour
 
         Light StarLight = plantcopy.transform.GetChild(0).GetComponent<Light>();
         //StarLight.range =   plantcopy.transform.localScale.x * 4800;
-        StarLight.intensity =   plantcopy.transform.localScale.x /10 ;
+        StarLight.intensity =   plantcopy.transform.localScale.x / 2 ;
         StarLight.color = PlanetColor;
         //StarLight.shadows = LightShadows.Hard;
 

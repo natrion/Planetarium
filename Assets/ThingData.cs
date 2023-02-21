@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ThingData : MonoBehaviour
 {
+    private float  star_light_itensity;
     public Transform PlayerCamera ;
     public GameObject ObjectPlayer;
     /// <RandomData>
@@ -46,7 +47,18 @@ public class ThingData : MonoBehaviour
     void Start()
     {
         PlayerCamera = transform.parent.parent.GetChild(0).GetChild(0);
+
+        //finding star istensity
+        if (transform.childCount != 0)//looking if object is star
+        {
+            GameObject star_light = transform.GetChild(0).gameObject;
+            if (star_light.CompareTag("star light"))//looking if object is star
+            {
+                star_light_itensity = star_light.transform.GetComponent<Light>().intensity;//sting star start light intensity
+            }           
+        }
     }
+
     void FixedUpdate()
     {
         if (Player.pouse == true & Player.OnInventory == true)////if game is not pouse
@@ -58,14 +70,19 @@ public class ThingData : MonoBehaviour
             /// <PlanetRotating>
             /// /////////////////////
             /// <star light>     
-            if (transform.childCount != 0)
+            if (transform.childCount != 0)//looking if object is star
             {
                 GameObject star_light = transform.GetChild(0).gameObject;
-                if (star_light.CompareTag("star light"))
+                if (star_light.CompareTag("star light"))//looking if object is star
                 {
-                    star_light.transform.LookAt(PlayerCamera);
-                    //Vector3 direction = (star_light.transform.position - PlayerCamera.position).normalized;
-                    //star_light.transform.eulerAngles = direction;
+                    Vector3 PlayerCameraRounded = new Vector3(Mathf.Round(PlayerCamera.position.x / 100) * 100,    //Rounding camera postion to 100
+                                                              Mathf.Round(PlayerCamera.position.y / 100) * 100,
+                                                              Mathf.Round(PlayerCamera.position.z / 100) * 100);
+                    star_light.transform.LookAt(PlayerCameraRounded); //turning light to player
+
+                    float starDistance = Vector3.Distance(PlayerCamera.position, star_light.transform.position);//making Light less efective far away
+
+                    star_light.transform.GetComponent<Light>().intensity = star_light_itensity / (starDistance / 2000);
                 }
             }
         }

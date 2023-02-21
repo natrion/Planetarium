@@ -204,7 +204,7 @@ public class Player : MonoBehaviour
             
             /////////////seting variables from script storage for caculating gravity
             float ComplexityOfPlanet = other.GetComponent<ThingData>().PlanetComplexity * other.transform.localScale.x;
-            float distance = Mathf.Abs(other.transform.position.x - transform.position.x) + Mathf.Abs(other.transform.position.y - transform.position.y) + Mathf.Abs(other.transform.position.z - transform.position.z);
+            float distance = Vector3.Distance(other.transform.position , transform.position);
             Vector3 direction = (other.transform.position - transform.position).normalized;
             /////////////sun Gravity
             if (other.transform.localScale.x == 0.7f)

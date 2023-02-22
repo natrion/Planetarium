@@ -43,18 +43,20 @@ public class Player : MonoBehaviour
     }
 
     void Update()
-    {
-        if (Input.GetMouseButton(0) & Time.timeScale != 0)
+    {////mining
+        if (Input.GetMouseButton(0) & Time.timeScale != 0)////stops mining during pause
         {
+            ////calculating thing in front of the player
             RaycastHit hit ;
             Ray ray = new Ray(Camera.transform.position, Camera.transform.forward);
 
-            if (Physics.Raycast(ray, out hit , 50f))
+            if (Physics.Raycast(ray, out hit , 50f))////stops script runing when nothing is in front of the player
             { 
-                if (hit.collider.gameObject.CompareTag("Rock")  )
+                if (hit.collider.gameObject.CompareTag("Rock")  )/////rock mining
                 {
-                    hit.collider.GetComponent<ThingData>().HealthToNewOre -= Damage;
-                    if (0 > hit.collider.GetComponent<ThingData>().HealthToNewOre)
+                    hit.collider.GetComponent<ThingData>().HealthToNewOre -= Damage;////making less time to another ore
+
+                    if (0 > hit.collider.GetComponent<ThingData>().HealthToNewOre)/////creating ore
                     {
                         GameObject ore = Instantiate(hit.collider.GetComponent<ThingData>().Ore);                       
                         ore.transform.position = hit.point;                                  
@@ -62,21 +64,21 @@ public class Player : MonoBehaviour
                         hit.collider.GetComponent<ThingData>().HealthToNewOre = hit.collider.GetComponent<ThingData>().MaxHealthToNewOre;
                     }
 
-                    hit.collider.GetComponent<ThingData>().Health -= Damage;
-                    
+                    hit.collider.GetComponent<ThingData>().Health -= Damage;////taking damage from rock
+
                     float health = hit.collider.GetComponent<ThingData>().Health;
                     float maxHealth = hit.collider.GetComponent<ThingData>().MaxHealth;
                     float StartRockSize = hit.collider.GetComponent<ThingData>().StartRockSize;
 
-                    hit.collider.transform.localScale = new Vector3(1, 1, 1) * (health / maxHealth * StartRockSize);
+                    hit.collider.transform.localScale = new Vector3(1, 1, 1) * (health / maxHealth * StartRockSize);////making rock smaller from mining
 
-                    if (2 > health)
+                    if (2 > health)////destroyng rock when low health (from 2 health -- for not making rock too small)
                     {
                         Destroy(hit.collider.gameObject);
                     }
 
                 }
-                else if (hit.collider.gameObject.CompareTag("Planet"))
+                else if (hit.collider.gameObject.CompareTag("Planet")) //planet mining
                 {
                     /////taking health from planet to spawn ore
                     hit.collider.GetComponent<ThingData>().HealthToNewOre1 -= Damage;
@@ -93,7 +95,7 @@ public class Player : MonoBehaviour
                         ore1.transform.parent = transform.parent;
                         hit.collider.GetComponent<ThingData>().HealthToNewOre1 = hit.collider.GetComponent<ThingData>().PlanetMaxHealthToNewOre1;
                     }
-                    ///////////////////////////////////////////////SpawningOre1
+                    ///////////////////////////////////////////////SpawningOre2
                     if (0 > hit.collider.GetComponent<ThingData>().HealthToNewOre2)
                     {
                         GameObject ore2 = Instantiate(hit.collider.GetComponent<ThingData>().PlanetOre2);
@@ -109,16 +111,22 @@ public class Player : MonoBehaviour
                 
             }
         }
+        ////colecting ore
         if (Input.GetMouseButtonDown(0) & Time.timeScale != 0)
         {
+            ////calculating thing in front of the player
             RaycastHit hit;
             Ray ray = new Ray(Camera.transform.position, Camera.transform.forward);
-            if ( Physics.Raycast(ray, out hit, 50f))
-            {
-                if (hit.collider.gameObject.CompareTag("Ore"))
-                {
-                    Destroy(hit.collider.gameObject);
 
+            if ( Physics.Raycast(ray, out hit, 50f))////stops script runing when nothing is in front of the player
+            {
+                if (hit.collider.gameObject.CompareTag("Ore"))////object must be ore
+                {
+                    Destroy(hit.collider.gameObject);////destroing ore
+
+                    /////adding ore to inventory
+                    
+                    ////finding existing same type ore panel
                     bool FoundSamePanel = false;
                     for (int OnChild = 0; OnChild < InventoriMenu.transform.childCount; OnChild++)
                     {
@@ -126,19 +134,20 @@ public class Player : MonoBehaviour
                         if (Child.GetComponent<ThingData>().OreType == hit.collider.GetComponent<ThingData>().OreUI.GetComponent<ThingData>().OreType)
                         {
                             FoundSamePanel = true;
+                            ////adding number of ores to panel
                             Child.GetComponent<ThingData>().AmountOfOres += hit.collider.GetComponent<ThingData>().OreAmountInrock;
                             string StringOfAmountOfOres = Child.GetComponent<ThingData>().AmountOfOres.ToString();
                             Child.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StringOfAmountOfOres;
                         }    
 
                     }
-
+                    /////when same panel is not found
                     if (FoundSamePanel == false)
                     {
-                        
+                        //////creting new panel
                         GameObject OreUI = Instantiate(hit.collider.GetComponent<ThingData>().OreUI);
                         OreUI.transform.SetParent(InventoriMenu.transform);
-
+                        /////seting number of ores to panel
                         OreUI.GetComponent<ThingData>().AmountOfOres = hit.collider.GetComponent<ThingData>().OreAmountInrock;
                         string StringOfAmountOfOres = OreUI.GetComponent<ThingData>().AmountOfOres.ToString();
                         OreUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StringOfAmountOfOres;

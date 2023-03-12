@@ -46,14 +46,14 @@ public class ThingData : MonoBehaviour
  
     void Start()
     {
-        PlayerCamera = transform.parent.parent.GetChild(0).GetChild(0);
-
+        
         //finding star istensity
         if (transform.childCount != 0)//looking if object is star
         {
             GameObject star_light = transform.GetChild(0).gameObject;
             if (star_light.CompareTag("star light"))//looking if object is star
             {
+                PlayerCamera = transform.parent.parent.GetChild(0).GetChild(0);////finding player camera
                 star_light_itensity = star_light.transform.GetComponent<Light>().intensity;//sting star start light intensity
             }           
         }
@@ -82,8 +82,8 @@ public class ThingData : MonoBehaviour
 
                     float starDistance = Vector3.Distance(PlayerCamera.position, star_light.transform.position);//making Light less efective far away
 
-                    star_light.transform.GetComponent<Light>().intensity = star_light_itensity / (starDistance / 2000);
-                }
+                    star_light.transform.GetComponent<Light>().intensity = star_light_itensity / (starDistance / 3000);
+                }                                                                                //making efect less efective
             }
         }
 

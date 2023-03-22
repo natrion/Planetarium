@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ThingData : MonoBehaviour
 {
+    public int Arrowtype;
     private float  star_light_itensity;
     public Transform PlayerCamera ;
     public GameObject ObjectPlayer;

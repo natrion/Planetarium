@@ -144,7 +144,7 @@ public class GeneratePlanet : MonoBehaviour
 
                 float PerlinNoyse1 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75 , y / 75  , (z - r1) / 75 ), PerlinoiseDestortion/2) * (PerlinoiseIntensity /5);
                 float PerlinNoyse2 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortion2 /2  ) * (PerlinoiseIntensity2 /5);
-                float PerlinNoyse3 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortion3 /2  ) * (PerlinoiseIntensity3 /5);
+      
                 float Terrein = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), TerrainDestortion * 50) * (TerrainIntensity / 5);
 
                 //float PerlinNoyse1 = Noise3D(x / 100, y / 100, (z - r1) / 100, PerlinoiseDestortion, PerlinoiseIntensity / 5, 1, 1,1000);
@@ -159,35 +159,35 @@ public class GeneratePlanet : MonoBehaviour
 
                 //float DegenerativePerlinNoise = Mathf.PerlinNoise((a2 - (a2 * 2)) * DegenerativePerlinNoiseDestortion, (aPerlin - (aPerlin * 2)) * DegenerativePerlinNoiseDestortion) * (DegenerativePerlinNoiseIntensity / 10);
 
-                float PerlinNoyse =  PerlinNoyse1 * PerlinNoyse2 * PerlinNoyse3 - Terrein ;
+                float PerlinNoyse =  PerlinNoyse1 * PerlinNoyse2  - Terrein ;
 
 
 
-                float maxPerlinNoyse = ((PerlinoiseIntensity ) * (PerlinoiseIntensity2 ) * (PerlinoiseIntensity3 ) ) ;
+                float maxPerlinNoyse = ((PerlinoiseIntensity ) * (PerlinoiseIntensity2 )  ) ;
                 
 
                 //if (i == Complexity | i == 0)
                 //{
                 //    PerlinNoyse = maxPerlinNoyse / 4;
-                if(d == 0)
-                {
-                    PerlinNoisewas = PerlinNoyse;
-                }else if(d> Complexity * 0.98f)
-                {
+                //if(d == 0)
+               // {
+               //     PerlinNoisewas = PerlinNoyse;
+               // }else if(d> Complexity * 0.98f)
+               // {
 
-                    if (k == false)
-                    {
-                        PerlinNoisewas2 = PerlinNoyse;
-                    }
-                    float a = (d - Complexity * 0.98f) / (Complexity - Complexity * 0.98f);
-                    PerlinNoyse = PerlinNoisewas2 + (a *  (PerlinNoisewas - PerlinNoisewas2)) - Terrein ;
-                    // PerlinNoyse += (PerlinNoisewas - PerlinNoyse) /  ( ( Complexity * 0.10f ) - ((float)d  - Complexity * 0.40f) )   ;
-                    k = true;
-                }
-                else
-                {
-                    k = false;
-                }
+               //     if (k == false)
+               //     {
+               //         PerlinNoisewas2 = PerlinNoyse;
+               //     }
+               //     float a = (d - Complexity * 0.98f) / (Complexity - Complexity * 0.98f);
+              //      PerlinNoyse = PerlinNoisewas2 + (a *  (PerlinNoisewas - PerlinNoisewas2)) - Terrein ;
+              //      // PerlinNoyse += (PerlinNoisewas - PerlinNoyse) /  ( ( Complexity * 0.10f ) - ((float)d  - Complexity * 0.40f) )   ;
+              //      k = true;
+              //  }
+              //  else
+              //  {
+              //      k = false;
+              //  }
 
 
                 //float z = r * Mathf.Sin(a2);
@@ -209,8 +209,7 @@ public class GeneratePlanet : MonoBehaviour
                     //colors[i * Complexity + d] = new Color(PlanetColor.r * (PerlinNoyse / whitness * colorDiference.r), PlanetColor.g * (PerlinNoyse / whitness * colorDiference.g), PlanetColor.b * (PerlinNoyse / whitness * colorDiference.b), PlanetColor.a);
                     //colors[i * Complexity + d] = new Color(PlanetColor.r * (PerlinNoyse / whitness), PlanetColor.g * (PerlinNoyse / whitness), PlanetColor.b * (PerlinNoyse / whitness), PlanetColor.a);
                 }
-                float PerlinNoyseBiom = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortionBiom+10000, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortionBiom + 10000) * (PerlinoiseIntensityBiom / 10);
-
+                float PerlinNoyseBiom = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortionBiom / 2) * (PerlinoiseIntensityBiom / 7);
 
 
 
@@ -400,7 +399,7 @@ public class GeneratePlanet : MonoBehaviour
                
         ///////////////////////////////////////////////////////////////////////
 
-        int PlanetNumber = Random.Range(1, 1);////generating planet number
+        int PlanetNumber = Random.Range(1, 10);////generating planet number
 
         PlanetsPositions = new Vector3[PlanetNumber];//Seting Variables for positions of planets
 
@@ -635,7 +634,7 @@ public class GeneratePlanet : MonoBehaviour
                 float b;
                 if (Random.Range(-1, 2) == 1) { b = 1; } else { b = -1; }
 
-                plantcopy.transform.position = new Vector3(Random.Range(2000, 15000) * a, 0, Random.Range(2000, 15000) * b);
+                plantcopy.transform.position = new Vector3(Random.Range(2000, 10000) * a, 0, Random.Range(2000, 10000) * b);
                 GoodDistance = true;
 
                 for (int d = 0; d < PlanetsPositions.Length; d++)
@@ -653,21 +652,19 @@ public class GeneratePlanet : MonoBehaviour
 
         Complexity = Random.Range(80, (int)MaxComplexity);
 
-        PerlinoiseIntensity = Random.Range(6f, 12f);
-        PerlinoiseIntensity2 = Random.Range(6f, 10f);
-        PerlinoiseIntensity3 = Random.Range(5f , 8f );
+        PerlinoiseIntensity = Random.Range(2f, 2f);
+        PerlinoiseIntensity2 = Random.Range(4f, 6f) * Mathf.Clamp(   (1200f / (float)Complexity) /4f, 1, 10f) ;
 
-        PerlinoiseDestortion = Random.Range(0.3f, 0.9f);
-        PerlinoiseDestortion2 = Random.Range(1f, 3.75f);
-        PerlinoiseDestortion3 = Random.Range(3f , 5f );
+        PerlinoiseDestortion = Random.Range(0.7f, 1f);
+        PerlinoiseDestortion2 = Random.Range(2f, 4f);
 
-        TerrainDestortion = Random.Range(70f , 100f );
-        TerrainIntensity = Random.Range(0.02f , 0.05f );
+        TerrainDestortion = Random.Range(60f , 80f );
+        TerrainIntensity = Random.Range(0.004f , 0.006f );
 
         //DegenerativePerlinNoiseDestortion = Random.Range(14f * ((float)Complexity / 1100), 20f * ((float)Complexity / 1100));
         //DegenerativePerlinNoiseIntensity = Random.Range(1f / ((float)Complexity / 1100), 1f / ((float)Complexity / 1100));
 
-        whitness = Random.Range(1.5f, 4.5f);
+        whitness = Random.Range(15f, 15f);
 
         PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
@@ -677,8 +674,8 @@ public class GeneratePlanet : MonoBehaviour
 
         PerlinoiseDestortionRock = Random.Range(3f, 6f);
         PerlinoiseDestortionRock2 = Random.Range(3f, 6f);
-        PerlinoiseIntensityRock = Random.Range(-5, -10);
-        PerlinoiseIntensityRock2 = Random.Range(-5, -10);
+        PerlinoiseIntensityRock = Random.Range(-5, -10) ;
+        PerlinoiseIntensityRock2 = Random.Range(-5, -10) * Mathf.Clamp(( (float)Complexity / 1200) *2 , 0.1f, 1f);
 
         plantcopy.GetComponent<MeshRenderer>().material = materials[Random.Range(0, 6)];
 

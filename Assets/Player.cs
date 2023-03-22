@@ -6,11 +6,13 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
-    
+
     /// //////////////////////////////////////////////////////
     /// <Seting Variables>
+    public GameObject ErrorMassageText;
     public float Damage;
     public static bool pouse = true;
+    public static bool OnbuildMenu = true;
     public static bool OnInventory = true;
     public GameObject Camera;
     public float sensitivity;
@@ -22,21 +24,65 @@ public class Player : MonoBehaviour
     private float YRotation;
     public GameObject PouseMenu;
     public GameObject InventoriMenu;
+    public GameObject buildMenu;
     public Transform PlayerFolder;
 
     [DllImport("user32.dll")]
     static extern bool SetCursorPos(int X, int Y);
 
+
+
+
+
+
+     IEnumerator BuildMenuturning()///////////////seting building menu not in update function must be deley between closing build menu
+     {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.F) & pouse == true & OnInventory == true)
+            {
+                if (OnbuildMenu == false)
+                {
+                    OnbuildMenu = true;
+                    yield return null;
+                    buildMenu.SetActive(false);
+                }
+                else
+                {
+                    OnbuildMenu = false;
+                    yield return null;
+                    buildMenu.SetActive(true);
+                    ErrorMassageText.SetActive(false);
+                }
+            }
+            yield return null;
+        }
+        
+     }
+
+
     void Start()
     {
+
+        ErrorMassageText.SetActive(false);
+
+        StartCoroutine(BuildMenuturning());
+
         /// //////////////////////////////////////////////////////
         /// <Seting Variables On Start>
+        ///  bool pouse = true;
+
         pouse = true;
         OnInventory = true;
+        OnbuildMenu = true;
         //SetCursorPos(-1, -1);
+
         Cursor.visible = false;
+
         PouseMenu.SetActive(false);
         InventoriMenu.SetActive(false);
+        buildMenu.SetActive(false);
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -156,7 +202,20 @@ public class Player : MonoBehaviour
             }
             
         }
-
+        if (pouse == true & OnInventory == true)
+        {
+            if (OnbuildMenu == true || OnbuildMenu == false & Input.GetMouseButton(1))/////making mouse not visible when biuld mode holding not right mouse button or playing normaly
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else/////making mouse visible when biuld mode holding right mouse button
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
+        
         /// //////////////////////////////////////////////////////
         /// <Opening Escape Menu>
         if (Input.GetKeyDown(KeyCode.Escape) & OnInventory == true)
@@ -199,6 +258,8 @@ public class Player : MonoBehaviour
                 Time.timeScale = 0;
             }
         }
+        /// <Opening build menu>
+        
 
     }
 
@@ -225,7 +286,7 @@ public class Player : MonoBehaviour
             {
                 if (distance < ComplexityOfPlanet)////gravity works for some distance
                 {
-                    transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet / Mathf.Sqrt(distance) * Gravitystrenght));
+                    transform.GetComponent<Rigidbody>().AddForce(direction * ((float)ComplexityOfPlanet* ComplexityOfPlanet / Mathf.Sqrt(distance) * Gravitystrenght));
                 }
                 
             }
@@ -287,7 +348,11 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         ///////////seting speed of player
-        speed += speed * Input.GetAxis("Mouse ScrollWheel") / 2;
+        if (OnbuildMenu == true)
+        {
+            speed += speed * Input.GetAxis("Mouse ScrollWheel") / 2;
+        }
+        
 
         ///////getting keyboard movemant
         float h = Input.GetAxisRaw("Horizontal");
@@ -304,34 +369,37 @@ public class Player : MonoBehaviour
         ///////getting mouse movemant
         float mY = Input.GetAxis("Mouse Y");
         float mX = Input.GetAxis("Mouse X");
-
-        //////////////////////////////rotating camera in space
-        if (Onplanet == false)
+        if (OnbuildMenu == true || OnbuildMenu == false & Input.GetMouseButton(1))////not rotating camera during build mode          and not pressing right mouse button
         {
-            transform.eulerAngles += new Vector3(0, mX * sensitivity / 50, 0);
-            YRotation += mY * Time.deltaTime * sensitivity;
-            YRotation = Mathf.Clamp(YRotation, -90, 90);
-            
-            Camera.transform.localEulerAngles = Vector3.left * YRotation;
+            //////////////////////////////rotating camera in space
+            if (Onplanet == false)
+            {
+                transform.eulerAngles += new Vector3(0, mX * sensitivity / 50, 0);
+                YRotation += mY * Time.deltaTime * sensitivity;
+                YRotation = Mathf.Clamp(YRotation, -90, 90);
+
+                Camera.transform.localEulerAngles = Vector3.left * YRotation;
 
 
+            }
+            else//////////////////////////////rotating camera on planet
+            {
+                //Vector3 planetPositionDiference = new Vector3(planetPosition.x - transform.position.x, planetPosition.y - transform.position.y, planetPosition.z - transform.position.z);
+                //float floatplanetPositionDiference = planetPositionDiference.x + planetPositionDiference.y + planetPositionDiference.z;
+
+                // planetPositionDiference = new Vector3(planetPositionDiference.x / floatplanetPositionDiference, 
+                //                                       planetPositionDiference.y / floatplanetPositionDiference, 
+                //                                       planetPositionDiference.z / floatplanetPositionDiference);
+                //Camera.transform.localEulerAngles += Vector3.left * mY * sensitivity;
+                //Camera.transform.localEulerAngles += Vector3.up * mX * sensitivity;
+                transform.Rotate((Vector3.up * mX) * Time.deltaTime * sensitivity);
+
+                YRotation += mY * Time.deltaTime * sensitivity;
+                YRotation = Mathf.Clamp(YRotation, -80, 80);
+                Camera.transform.localEulerAngles = Vector3.left * YRotation;
+                // print("Near Planet");
+            }
         }
-        else//////////////////////////////rotating camera on planet
-        {
-            //Vector3 planetPositionDiference = new Vector3(planetPosition.x - transform.position.x, planetPosition.y - transform.position.y, planetPosition.z - transform.position.z);
-            //float floatplanetPositionDiference = planetPositionDiference.x + planetPositionDiference.y + planetPositionDiference.z;
-
-           // planetPositionDiference = new Vector3(planetPositionDiference.x / floatplanetPositionDiference, 
-           //                                       planetPositionDiference.y / floatplanetPositionDiference, 
-           //                                       planetPositionDiference.z / floatplanetPositionDiference);
-            //Camera.transform.localEulerAngles += Vector3.left * mY * sensitivity;
-            //Camera.transform.localEulerAngles += Vector3.up * mX * sensitivity;
-            transform.Rotate((Vector3.up * mX) * Time.deltaTime * sensitivity);
-
-            YRotation +=  mY * Time.deltaTime * sensitivity;
-            YRotation = Mathf.Clamp(YRotation, -80, 80);
-            Camera.transform.localEulerAngles = Vector3.left * YRotation;
-           // print("Near Planet");
-        }        
+        
     }
 }

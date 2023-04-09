@@ -314,12 +314,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b4f12cc65cb8e4a9c8e3a74ade06ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridSize: 2
   thingsHight: 1
   needList: {fileID: 80002542}
   ErrorMassageText: {fileID: 2027470499}
-  AmountResorsesToBuild: 05000000
-  TypeResorsesToBuild:
-  - Fe
+  AmountResorsesToBuild: 
+  TypeResorsesToBuild: []
   inventory: {fileID: 114956522}
   selectModeThing: {fileID: 9191018258040172593, guid: 174aece8b596b0546851c90f63f5070b,
     type: 3}
@@ -623,9 +623,12 @@ MonoBehaviour:
   snowHight: 1
   PerlinoiseIntensityBiom: 1.5
   PerlinoiseDestortionBiom: 2
-  BiomColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 0}
-  BiomColorIntensity: 4
+  PerlinoiseIntensityBiom2: 0
+  PerlinoiseDestortionBiom2: 0
   BiomGenerateHight: 1
+  BiomColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 0}
+  BiomColor2: {r: 0, g: 0, b: 0, a: 0}
+  BiomColorIntensity: 4
   PlanetCanvas: {fileID: 9031347507119717172, guid: c173d1b13fb92884481d610fdda7606c,
     type: 3}
   starCanvas: {fileID: 9031347507119717172, guid: 29d787ab8985c6540823a011658172c7,
@@ -1297,12 +1300,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b4f12cc65cb8e4a9c8e3a74ade06ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridSize: 2
   thingsHight: 1
   needList: {fileID: 80002542}
   ErrorMassageText: {fileID: 2027470499}
-  AmountResorsesToBuild: 05000000
-  TypeResorsesToBuild:
-  - Cu
+  AmountResorsesToBuild: 
+  TypeResorsesToBuild: []
   inventory: {fileID: 114956522}
   selectModeThing: {fileID: 2292438077056320787, guid: 30bf8ada14f8de343b502f4096adaebf,
     type: 3}
@@ -2180,7 +2183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1936464910}
   m_Layer: 0
-  m_Name: PlayerFolder
+  m_Name: Space
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

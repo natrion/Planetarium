@@ -9,6 +9,7 @@ TagManager:
   - Ore
   - OrePanel
   - star light
+  - Builded thing
   layers:
   - Default
   - TransparentFX

@@ -40,17 +40,22 @@ public class GeneratePlanet : MonoBehaviour
     public float TerrainIntensity;
     public float TerrainDestortion;
     private Vector2[] uvs;
-    private float PerlinNoisewas = 1;
-    private float PerlinNoisewas2 = 1;
+    //private float PerlinNoisewas = 1;
+    //private float PerlinNoisewas2 = 1;
     public float whitness;
     public Color PlanetColor;
     public Color MountainColor;
     public float snowHight;
+
     public float PerlinoiseIntensityBiom;
     public float PerlinoiseDestortionBiom;
-    public Color BiomColor;
-    public float BiomColorIntensity;
+    public float PerlinoiseIntensityBiom2;
+    public float PerlinoiseDestortionBiom2;
+
     public float BiomGenerateHight;
+
+    public Color BiomColor;
+    public Color BiomColor2;
 
     public GameObject PlanetCanvas;
     public GameObject starCanvas;
@@ -135,16 +140,19 @@ public class GeneratePlanet : MonoBehaviour
                 //print(ZCalculated + "= ZCalculated");
 
 
-                float northeastnumber = 1 - Mathf.Abs( (float)i / (float)Complexity - 0.5f);////detect how far is this round to pole
-                float unroal = Mathf.Abs(( (float)i / (float)Complexity) - 0.5f);
+                //float northeastnumber = 1 - Mathf.Abs( (float)i / (float)Complexity - 0.5f);////detect how far is this round to pole
+                //float unroal = Mathf.Abs(( (float)i / (float)Complexity) - 0.5f);
 
-                float aPerlin = a  ;
+                //float aPerlin = a  ;
 
                 //print(northeastnumber);
 
                 float PerlinNoyse1 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75 , y / 75  , (z - r1) / 75 ), PerlinoiseDestortion/2) * (PerlinoiseIntensity /5);
                 float PerlinNoyse2 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortion2 /2  ) * (PerlinoiseIntensity2 /5);
-      
+                float PerlinNoyse3Original  = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortion3 / 2);
+
+                float PerlinNoyse3 = 1 - Mathf.Abs(PerlinNoyse3Original);
+
                 float Terrein = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), TerrainDestortion * 50) * (TerrainIntensity / 5);
 
                 //float PerlinNoyse1 = Noise3D(x / 100, y / 100, (z - r1) / 100, PerlinoiseDestortion, PerlinoiseIntensity / 5, 1, 1,1000);
@@ -159,11 +167,11 @@ public class GeneratePlanet : MonoBehaviour
 
                 //float DegenerativePerlinNoise = Mathf.PerlinNoise((a2 - (a2 * 2)) * DegenerativePerlinNoiseDestortion, (aPerlin - (aPerlin * 2)) * DegenerativePerlinNoiseDestortion) * (DegenerativePerlinNoiseIntensity / 10);
 
-                float PerlinNoyse =  PerlinNoyse1 * PerlinNoyse2  - Terrein ;
+                float PerlinNoyse =  PerlinNoyse1 * PerlinNoyse2 * PerlinNoyse3 - Terrein ;
 
 
 
-                float maxPerlinNoyse = ((PerlinoiseIntensity ) * (PerlinoiseIntensity2 )  ) ;
+                float maxPerlinNoyse = ((PerlinoiseIntensity ) * (PerlinoiseIntensity2 ) + Terrein) ;
                 
 
                 //if (i == Complexity | i == 0)
@@ -199,61 +207,67 @@ public class GeneratePlanet : MonoBehaviour
 
 
                 /////////////////////////////////////////////////////////////////generating mountain colors
-                if (snowHight > PerlinNoyse)
-                {
-                    colors[i * Complexity + d] = new Color(PlanetColor.r  , PlanetColor.g , PlanetColor.b , PlanetColor.a);
-                }
-                else
-                {
-                    colors[i * Complexity + d] = new Color(PlanetColor.r + (PerlinNoyse / maxPerlinNoyse) * colorDiference.r*whitness, PlanetColor.g + (PerlinNoyse / maxPerlinNoyse) * colorDiference.g*whitness, PlanetColor.b + (PerlinNoyse / maxPerlinNoyse) * colorDiference.b * whitness, PlanetColor.a);
+                //if (snowHight > PerlinNoyse)
+                //{
+                 //   colors[i * Complexity + d] = new Color(PlanetColor.r  , PlanetColor.g , PlanetColor.b , PlanetColor.a);
+               // }
+               // else
+               // {
+                //    colors[i * Complexity + d] = new Color(PlanetColor.r + (PerlinNoyse / maxPerlinNoyse) * colorDiference.r*whitness, PlanetColor.g + (PerlinNoyse / maxPerlinNoyse) * colorDiference.g*whitness, PlanetColor.b + (PerlinNoyse / maxPerlinNoyse) * colorDiference.b * whitness, PlanetColor.a);
                     //colors[i * Complexity + d] = new Color(PlanetColor.r * (PerlinNoyse / whitness * colorDiference.r), PlanetColor.g * (PerlinNoyse / whitness * colorDiference.g), PlanetColor.b * (PerlinNoyse / whitness * colorDiference.b), PlanetColor.a);
                     //colors[i * Complexity + d] = new Color(PlanetColor.r * (PerlinNoyse / whitness), PlanetColor.g * (PerlinNoyse / whitness), PlanetColor.b * (PerlinNoyse / whitness), PlanetColor.a);
-                }
-                float PerlinNoyseBiom = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortionBiom / 2) * (PerlinoiseIntensityBiom / 7);
+               // }
+                float PerlinNoyseBiom1 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortionBiom / 2) * (PerlinoiseIntensityBiom / 7);
+                float PerlinNoyseBiom2 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortionBiom2 / 2) * (PerlinoiseIntensityBiom2 / 7);
 
-
+                Color finalBiomColor = PerlinNoyseBiom1 * (BiomColor) + PerlinNoyseBiom2 * (BiomColor2);
 
 
 
                 /////////////////////////////////////////////////////////////////generating biom colors
-                if ((PerlinNoyse / maxPerlinNoyse) < BiomGenerateHight)
-                {
-                   // if (d > Complexity * 0.95f)
-                   // {
+                // if ((PerlinNoyse / maxPerlinNoyse) < BiomGenerateHight)
+                // {
+                // if (d > Complexity * 0.95f)
+                // {
 
-                   //     if (s == false)
-                    //    {
-                   //         BiomNoisewas2 = PerlinNoyseBiom;
-                   //     }
-                     //   float a = (d - Complexity * 0.95f) / (Complexity - Complexity * 0.95f);
-                    //    PerlinNoyseBiom = BiomNoisewas + (a * (BiomNoisewas - BiomNoisewas2)) ;
-                        // PerlinNoyse += (PerlinNoisewas - PerlinNoyse) /  ( ( Complexity * 0.10f ) - ((float)d  - Complexity * 0.40f) )   ;
-                    //    s = true;
-                        
-                   // }
-                    //else
-                   // {
-                   //     s = false;
-                   //     if (d == 0)
-                   //     {
-                   //         BiomNoisewas = PerlinNoyseBiom;
-                   //     }
-                   // }
-                    colors[i * Complexity + d] = new Color(colors[i * Complexity + d].r + PerlinNoyseBiom * (BiomColor.r - colors[i * Complexity + d].r) * BiomColorIntensity, colors[i * Complexity + d].g + PerlinNoyseBiom * (BiomColor.g - colors[i * Complexity + d].g) * BiomColorIntensity, colors[i * Complexity + d].b + PerlinNoyseBiom * (BiomColor.b - colors[i * Complexity + d].b) * BiomColorIntensity, PlanetColor.a);
+                //     if (s == false)
+                //    {
+                //         BiomNoisewas2 = PerlinNoyseBiom;
+                //     }
+                //   float a = (d - Complexity * 0.95f) / (Complexity - Complexity * 0.95f);
+                //    PerlinNoyseBiom = BiomNoisewas + (a * (BiomNoisewas - BiomNoisewas2)) ;
+                // PerlinNoyse += (PerlinNoisewas - PerlinNoyse) /  ( ( Complexity * 0.10f ) - ((float)d  - Complexity * 0.40f) )   ;
+                //    s = true;
 
-                }
+                // }
+                //else
+                // {
+                //     s = false;
+                //     if (d == 0)
+                //     {
+                //         BiomNoisewas = PerlinNoyseBiom;
+                //     }
+                // }high
 
+                Color highColor = MountainColor * whitness * (PerlinNoyse / maxPerlinNoyse);
+                
 
+                if (PerlinoiseIntensity == 0) { colors[i * Complexity + d] = PlanetColor + finalBiomColor; }//sun color
+                else { colors[i * Complexity + d] = PlanetColor + finalBiomColor + highColor; }//planet color 
 
-
-
-
-
+                // }
 
 
 
 
-                float PerlinNoyseRock = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortionRock + 10000, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortionRock + 10000) ;
+
+
+
+
+
+
+
+                float PerlinNoyseRock = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortionRock + 10000, (a - (a * 2)) * PerlinoiseDestortionRock + 10000) ;
                 if (generateRock == true)
                 {
                     float rockGenerate = Random.Range(PerlinoiseIntensityRock, PerlinNoyseRock);
@@ -269,7 +283,7 @@ public class GeneratePlanet : MonoBehaviour
                     }
                 }
 
-                float PerlinNoyseRock2 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortionRock2 + 10000, (aPerlin - (aPerlin * 2)) * PerlinoiseDestortionRock2 + 10000);
+                float PerlinNoyseRock2 = Mathf.PerlinNoise((a2 - (a2 * 2)) * PerlinoiseDestortionRock2 + 10000, (a - (a * 2)) * PerlinoiseDestortionRock2 + 10000);
                 if (generateRock == true)
                 {
                     float rockGenerate = Random.Range(PerlinoiseIntensityRock2, PerlinNoyseRock2);
@@ -292,7 +306,7 @@ public class GeneratePlanet : MonoBehaviour
                     print("Bug");
                 }
             }
-            PerlinNoisewas = 1;
+            //PerlinNoisewas = 1;
             if (r !=0 )
             {
                 a2 += ((Mathf.PI / Complexity) / r) * r1;
@@ -652,25 +666,32 @@ public class GeneratePlanet : MonoBehaviour
 
         Complexity = Random.Range(80, (int)MaxComplexity);
 
-        PerlinoiseIntensity = Random.Range(2f, 2f);
-        PerlinoiseIntensity2 = Random.Range(4f, 6f) * Mathf.Clamp(   (1200f / (float)Complexity) /4f, 1, 10f) ;
+        PerlinoiseIntensity = Random.Range(3f, 4f);
+        PerlinoiseIntensity2 = Random.Range(5f, 7f) * Mathf.Clamp(   (1200f / (float)Complexity) /4f, 1, 10f) ;
+        PerlinoiseIntensity3 = Random.Range(8f, 12f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f);
 
-        PerlinoiseDestortion = Random.Range(0.7f, 1f);
-        PerlinoiseDestortion2 = Random.Range(2f, 4f);
+        PerlinoiseDestortion = Random.Range(0.7f, 2f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); ;
+        PerlinoiseDestortion2 = Random.Range(2.5f, 3.5f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); ;
+        PerlinoiseDestortion3 = Random.Range(3f, 4f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); ;
 
         TerrainDestortion = Random.Range(60f , 80f );
         TerrainIntensity = Random.Range(0.004f , 0.006f );
 
         //DegenerativePerlinNoiseDestortion = Random.Range(14f * ((float)Complexity / 1100), 20f * ((float)Complexity / 1100));
         //DegenerativePerlinNoiseIntensity = Random.Range(1f / ((float)Complexity / 1100), 1f / ((float)Complexity / 1100));
-
-        whitness = Random.Range(15f, 15f);
-
         PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-        BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-        PerlinoiseIntensityBiom = Random.Range(1f, 2f);
-        PerlinoiseDestortionBiom = Random.Range(1f, 3f);
+
+        whitness = Random.Range(70, 100);
         MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+        BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        PerlinoiseIntensityBiom = Random.Range(5.4f, 6.6f);
+        PerlinoiseDestortionBiom = Random.Range(1f, 2f);
+
+        BiomColor2 = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        PerlinoiseIntensityBiom2= Random.Range(1.2f, 1.6f);
+        PerlinoiseDestortionBiom2 = Random.Range(6f, 10f);
+
 
         PerlinoiseDestortionRock = Random.Range(3f, 6f);
         PerlinoiseDestortionRock2 = Random.Range(3f, 6f);

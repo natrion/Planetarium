@@ -83,7 +83,7 @@ public class ThingData : MonoBehaviour
 
                     float starDistance = Vector3.Distance(PlayerCamera.position, star_light.transform.position);//making Light less efective far away
 
-                    star_light.transform.GetComponent<Light>().intensity = star_light_itensity / (starDistance / 3000);
+                    star_light.transform.GetComponent<Light>().intensity = star_light_itensity / (starDistance / 5000);
                 }                                                                                //making efect less efective
             }
         }

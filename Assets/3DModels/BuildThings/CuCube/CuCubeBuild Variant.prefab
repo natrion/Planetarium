@@ -72,6 +72,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CuCubeBuild Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 034d30b6f94d6b447a56fdc2c9c6896b,
+        type: 3}
+      propertyPath: m_TagString
+      value: Builded thing
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 034d30b6f94d6b447a56fdc2c9c6896b, type: 3}
 --- !u!1 &3950564487944275192 stripped

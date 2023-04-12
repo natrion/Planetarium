@@ -31,6 +31,7 @@ public class GeneratePlanet : MonoBehaviour
     private int howManyPoints;
     private float a;
     private float a2;
+
     public float PerlinoiseIntensity;
     public float PerlinoiseDestortion;
     public float PerlinoiseIntensity2;
@@ -39,6 +40,10 @@ public class GeneratePlanet : MonoBehaviour
     public float PerlinoiseDestortion3;
     public float TerrainIntensity;
     public float TerrainDestortion;
+
+    public float PlanetShapeDestortion;
+    public float PlanetShapeIntensity;
+
     private Vector2[] uvs;
     //private float PerlinNoisewas = 1;
     //private float PerlinNoisewas2 = 1;
@@ -150,6 +155,7 @@ public class GeneratePlanet : MonoBehaviour
                 float PerlinNoyse1 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75 , y / 75  , (z - r1) / 75 ), PerlinoiseDestortion/2) * (PerlinoiseIntensity /5);
                 float PerlinNoyse2 = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortion2 /2  ) * (PerlinoiseIntensity2 /5);
                 float PerlinNoyse3Original  = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PerlinoiseDestortion3 / 2);
+                float PlanetShape = perlinNoise.get3DPerlinNoise(new Vector3(x / 75, y / 75, (z - r1) / 75), PlanetShapeDestortion / 2) * (PlanetShapeIntensity / 5);
 
                 float PerlinNoyse3 = 1 - Mathf.Abs(PerlinNoyse3Original);
 
@@ -167,7 +173,7 @@ public class GeneratePlanet : MonoBehaviour
 
                 //float DegenerativePerlinNoise = Mathf.PerlinNoise((a2 - (a2 * 2)) * DegenerativePerlinNoiseDestortion, (aPerlin - (aPerlin * 2)) * DegenerativePerlinNoiseDestortion) * (DegenerativePerlinNoiseIntensity / 10);
 
-                float PerlinNoyse =  PerlinNoyse1 * PerlinNoyse2 * PerlinNoyse3 - Terrein ;
+                float PerlinNoyse =  PlanetShape+PerlinNoyse1 * PerlinNoyse2 * PerlinNoyse3 - Terrein ;
 
 
 
@@ -249,7 +255,7 @@ public class GeneratePlanet : MonoBehaviour
                 //     }
                 // }high
 
-                Color highColor = MountainColor * whitness * (PerlinNoyse / maxPerlinNoyse);
+                Color highColor = MountainColor * whitness * ((PerlinNoyse- PlanetShape) / maxPerlinNoyse);
                 
 
                 if (PerlinoiseIntensity == 0) { colors[i * Complexity + d] = PlanetColor + finalBiomColor; }//sun color
@@ -557,7 +563,47 @@ public class GeneratePlanet : MonoBehaviour
         //plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.05f, 0.2f);
         for (int i = 0; i < 2; i++)/////making 2 rocks
         {
-            plantcopy = Instantiate(RockFolder.transform.GetChild(Random.Range(0, RockFolder.transform.childCount)).gameObject);////coping randomli selected rock
+            
+            if (Random.Range(1,50) == 40)
+            {
+                plantcopy = Instantiate(RockFolder.transform.GetChild(Random.Range(0, RockFolder.transform.childCount)).gameObject);////coping randomli selected rock
+            }
+            else
+            {
+                generateRock = false;
+                textureSize = 70;
+                plantcopy = Instantiate(PlanetCanvas);
+                Complexity = Random.Range(50, 80);
+
+                PlanetShapeIntensity = Random.Range(20f, 30f);
+                PerlinoiseIntensity = Random.Range(4f, 8f);
+                PerlinoiseIntensity2 = Random.Range(10f, 14f);
+                PerlinoiseIntensity3 = Random.Range(16f, 24f);
+
+                PlanetShapeDestortion = Random.Range(2f, 3f);
+                PerlinoiseDestortion = Random.Range(4f, 8f);
+                PerlinoiseDestortion2 = Random.Range(6f, 8f);
+                PerlinoiseDestortion3 = Random.Range(7f, 10f);
+
+                TerrainDestortion = Random.Range(15, 17);
+                TerrainIntensity = Random.Range(0.2f, 0.8f);
+
+                //DegenerativePerlinNoiseDestortion = Random.Range(14f * ((float)Complexity / 1100), 20f * ((float)Complexity / 1100));
+                //DegenerativePerlinNoiseIntensity = Random.Range(1f / ((float)Complexity / 1100), 1f / ((float)Complexity / 1100));
+                PlanetColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+                whitness = Random.Range(140, 200);
+                MountainColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+                BiomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+                PerlinoiseIntensityBiom = Random.Range(5.4f, 6.6f);
+                PerlinoiseDestortionBiom = Random.Range(1f, 2f);
+
+                BiomColor2 = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+                PerlinoiseIntensityBiom2 = Random.Range(1.2f, 1.6f);
+                PerlinoiseDestortionBiom2 = Random.Range(6f, 10f);
+            }
+            
             if (i==0)////efecting rock1 on tur 1     and rock2 on turn 2
             {
                 plantcopyRock = plantcopy;/////making copy of the rock
@@ -569,18 +615,23 @@ public class GeneratePlanet : MonoBehaviour
                 plantcopyRock2.SetActive(false);
             }
             
-            plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(1f, 2f);////randomly scaling rock
 
-            plantcopy.GetComponent<ThingData>().Health = plantcopy.transform.localScale.x * 10;////seting rock health 
-            plantcopy.GetComponent<ThingData>().MaxHealth = plantcopy.transform.localScale.x * 10;////seting rock  max health so the script can scale it down when mining corectly
+            plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.02f, 0.05f);////randomly scaling rock
+
+            plantcopy.GetComponent<ThingData>().Health = plantcopy.transform.localScale.x * 400;////seting rock health 
+            plantcopy.GetComponent<ThingData>().MaxHealth = plantcopy.transform.localScale.x * 400;////seting rock  max health so the script can scale it down when mining corectly
 
             plantcopy.GetComponent<ThingData>().StartRockSize = plantcopy.transform.localScale.x * 2.8f;////seting rock scale so the script can scale it down when mining corectly
 
             plantcopy.GetComponent<ThingData>().Ore = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;////seting rocks ore
 
-            plantcopy.GetComponent<ThingData>().MaxHealthToNewOre = Random.Range(2f, 5f);// seting MaxHealthToNewOre
+            plantcopy.GetComponent<ThingData>().MaxHealthToNewOre = Random.Range(8f, 12f);// seting MaxHealthToNewOre
             plantcopy.GetComponent<ThingData>().HealthToNewOre = plantcopy.GetComponent<ThingData>().MaxHealthToNewOre;// seting HealthToNewOre
-            //OneGeneratePlanet();
+
+            plantcopy.GetComponent<ThingData>().ThingsExploreData = Random.Range(0, 1000000000000000.000f);
+            plantcopy.GetComponent<ThingData>().thingExplordataType = "Planet Data";
+
+            OneGeneratePlanet();
             if (i == 0)////efecting rock1 on tur 1     and rock2 on turn 2
             {
                 Destroy(plantcopyRock);////Destroing rock1 so there is not any not wanted rock in the scene
@@ -634,7 +685,7 @@ public class GeneratePlanet : MonoBehaviour
         //Destroy(plantcopyRock2);
         //////////////////////////////////////////////////////////GENERATING PLANET
         generateRock = true;
-        
+        textureSize = 10;
 
         plantcopy = Instantiate(PlanetCanvas);
         plantcopy.transform.parent = transform;
@@ -666,13 +717,15 @@ public class GeneratePlanet : MonoBehaviour
 
         Complexity = Random.Range(80, (int)MaxComplexity);
 
-        PerlinoiseIntensity = Random.Range(3f, 4f);
-        PerlinoiseIntensity2 = Random.Range(5f, 7f) * Mathf.Clamp(   (1200f / (float)Complexity) /4f, 1, 10f) ;
-        PerlinoiseIntensity3 = Random.Range(8f, 12f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f);
+        PlanetShapeIntensity = Random.Range(0f, 3f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f);
+        PerlinoiseIntensity = Random.Range(1f, 2f);
+        PerlinoiseIntensity2 = Random.Range(5f, 7f)  ;
+        PerlinoiseIntensity3 = Random.Range(8f, 12f) ;
 
-        PerlinoiseDestortion = Random.Range(0.7f, 2f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); ;
-        PerlinoiseDestortion2 = Random.Range(2.5f, 3.5f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); ;
-        PerlinoiseDestortion3 = Random.Range(3f, 4f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); ;
+        PlanetShapeDestortion = Random.Range(0.7f, 2f) * Mathf.Clamp(( 1200f / (float)Complexity) / 4f, 1, 10f);
+        PerlinoiseDestortion = Random.Range(0.7f, 2f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); 
+        PerlinoiseDestortion2 = Random.Range(2.5f, 3.5f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); 
+        PerlinoiseDestortion3 = Random.Range(7f, 10f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); 
 
         TerrainDestortion = Random.Range(60f , 80f );
         TerrainIntensity = Random.Range(0.004f , 0.006f );
@@ -716,7 +769,18 @@ public class GeneratePlanet : MonoBehaviour
         plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre2 = Random.Range(15f, 30f);
         plantcopy.GetComponent<ThingData>().HealthToNewOre1 = plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre1;
         plantcopy.GetComponent<ThingData>().HealthToNewOre2 = plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre2;
+        plantcopy.GetComponent<ThingData>().ThingsExploreData = Random.Range(0, 1000000000000000.000f);
+        plantcopy.GetComponent<ThingData>().thingExplordataType = "Planet Data";
+    }
+    void Updatee()
+    {
+        
+        if (!plantcopy )
+        {
+            plantcopy = Instantiate(PlanetCanvas);
+        }
 
+        OneGeneratePlanet();
     }
 
     

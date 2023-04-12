@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
 
     /// //////////////////////////////////////////////////////
     /// <Seting Variables>
+    public bool techTreeOn;
+    public GameObject techTreeOnUI;
     public GameObject ErrorMassageText;
     public float Damage;
     public static bool pouse = true;
@@ -63,7 +65,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-
+        techTreeOnUI.SetActive(false);
         ErrorMassageText.SetActive(false);
 
         StartCoroutine(BuildMenuturning());
@@ -202,7 +204,7 @@ public class Player : MonoBehaviour
             }
             
         }
-        if (pouse == true & OnInventory == true)
+        if (pouse == true & OnInventory == true & techTreeOn == false)
         {
             if (OnbuildMenu == true || OnbuildMenu == false & Input.GetMouseButton(1))/////making mouse not visible when biuld mode holding not right mouse button or playing normaly
             {
@@ -218,7 +220,7 @@ public class Player : MonoBehaviour
         
         /// //////////////////////////////////////////////////////
         /// <Opening Escape Menu>
-        if (Input.GetKeyDown(KeyCode.Escape) & OnInventory == true)
+        if (Input.GetKeyDown(KeyCode.Escape) & OnInventory == true & techTreeOn == false)
         {
             if (pouse == false)
             {
@@ -239,7 +241,7 @@ public class Player : MonoBehaviour
         }
         /// //////////////////////////////////////////////////////
         /// <Opening Inventori>
-        if (Input.GetKeyDown(KeyCode.Tab) & pouse == true)
+        if (Input.GetKeyDown(KeyCode.Tab) & pouse == true & techTreeOn == false )
         {
             if (OnInventory == false)
             {
@@ -258,8 +260,26 @@ public class Player : MonoBehaviour
                 Time.timeScale = 0;
             }
         }
-        /// <Opening build menu>
-        
+        /// <Opening tech menu>
+        if (Input.GetKeyDown(KeyCode.Q) & pouse == true & OnInventory == true )
+        {
+            if (techTreeOn == true)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                techTreeOn = false;
+                techTreeOnUI.SetActive(false);
+                Time.timeScale = 1;
+            }
+            else
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                techTreeOn = true;
+                techTreeOnUI.SetActive(true);
+                Time.timeScale = 0;
+            }
+        }
 
     }
 

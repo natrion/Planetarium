@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ThingData : MonoBehaviour
 {
+    public float ThingsExploreData;
+    public bool thingDiscoverd = false;
+    public string thingExplordataType;
+
     public int Arrowtype;
     private float  star_light_itensity;
     public Transform PlayerCamera ;
@@ -11,6 +15,7 @@ public class ThingData : MonoBehaviour
     /// <RandomData>
     /// ////////////////////////////////////////////////
     /// <PlanetData>
+    
     public float PlanetComplexity;
     public float Intensity;
 

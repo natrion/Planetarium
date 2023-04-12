@@ -6,11 +6,13 @@ using TMPro;
 
 public class Building : MonoBehaviour
 {
+    private GameObject hitedThing;
+
     public float rotatingNumber = 20;
 
     public float gridSize;
     //builds thing hight
-    public float thingsHight=1;
+    private float thingsHight=1;
     //sting rotation variables
     public float rotatingX; //= System.Convert.ToInt32(Input.GetKey(KeyCode.Alpha1)) - System.Convert.ToInt32(Input.GetKey(KeyCode.Alpha2)); //setting variables for rotating thing
     public float rotatingY; //= System.Convert.ToInt32(Input.GetKey(KeyCode.Alpha3)) - System.Convert.ToInt32(Input.GetKey(KeyCode.Alpha4));
@@ -79,8 +81,8 @@ public class Building : MonoBehaviour
 
         while (!Input.GetMouseButton(0) & Player.OnbuildMenu == false)////moving thing
         {
-           
 
+            
             RaycastHit hit;
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             /////////not moving object during rotate Mode
@@ -94,7 +96,7 @@ public class Building : MonoBehaviour
                     //setting postion on nother build thing
                     if (hit.collider.gameObject.CompareTag("Builded thing"))
                     {
-                        GameObject hitedThing = hit.collider.gameObject;
+                         hitedThing = hit.collider.gameObject;
 
                         Vector3 SlectPosOnBuildedThing = (hit.point - hitedThing.transform.position);
                         float SlectPOnBTFullRatio = Mathf.Abs(SlectPosOnBuildedThing.x) + Mathf.Abs(SlectPosOnBuildedThing.y) + Mathf.Abs(SlectPosOnBuildedThing.z);
@@ -170,9 +172,12 @@ public class Building : MonoBehaviour
 
             //rotating
             copySelectThing.transform.localEulerAngles = new Vector3(0, 0, 0);
-            if (copySelectThing.transform.parent.gameObject.name != "Space")//finfing direction facing to the planet
+            if (copySelectThing.transform.parent.gameObject.name != "Space" & !Input.GetKey(KeyCode.LeftControl))//finfing direction facing to the planet
             {
                 copySelectThing.transform.LookAt(copySelectThing.transform.parent.position);
+            }else if(Input.GetKey(KeyCode.LeftControl) & hitedThing)
+            {
+                copySelectThing.transform.eulerAngles = hitedThing.transform.eulerAngles;
             }
             //grid mode sensitivity change
             rotatingNumber = 20;

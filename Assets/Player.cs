@@ -9,6 +9,10 @@ public class Player : MonoBehaviour
 
     /// //////////////////////////////////////////////////////
     /// <Seting Variables>
+    public ThingData ThingDataScript;    
+    public GameObject PlanetDiscoverdNumber;
+    public GameObject RockDiscoverdNumber;
+    public bool BuildModeResearched;
     public bool techTreeOn;
     public GameObject techTreeOnUI;
     public GameObject ErrorMassageText;
@@ -18,7 +22,8 @@ public class Player : MonoBehaviour
     public static bool OnInventory = true;
     public GameObject Camera;
     public float sensitivity;
-    public float speed;
+    public float MaxSpeed ;
+    public float speed ;
     public float Gravitystrenght;
     private bool Onplanet = false;
     public  float planetCamerashiftDistance;
@@ -39,9 +44,9 @@ public class Player : MonoBehaviour
 
      IEnumerator BuildMenuturning()///////////////seting building menu not in update function must be deley between closing build menu
      {
-        while (true)
-        {
-            if (Input.GetKeyDown(KeyCode.F) & pouse == true & OnInventory == true)
+       
+        
+            if (Input.GetKeyDown(KeyCode.F) & pouse == true & OnInventory == true )
             {
                 if (OnbuildMenu == false)
                 {
@@ -58,7 +63,7 @@ public class Player : MonoBehaviour
                 }
             }
             yield return null;
-        }
+        
         
      }
 
@@ -68,12 +73,13 @@ public class Player : MonoBehaviour
         techTreeOnUI.SetActive(false);
         ErrorMassageText.SetActive(false);
 
-        StartCoroutine(BuildMenuturning());
+        
 
         /// //////////////////////////////////////////////////////
         /// <Seting Variables On Start>
         ///  bool pouse = true;
 
+        techTreeOn = false;
         pouse = true;
         OnInventory = true;
         OnbuildMenu = true;
@@ -84,6 +90,7 @@ public class Player : MonoBehaviour
         PouseMenu.SetActive(false);
         InventoriMenu.SetActive(false);
         buildMenu.SetActive(false);
+        techTreeOnUI.SetActive(false) ;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -102,6 +109,26 @@ public class Player : MonoBehaviour
             { 
                 if (hit.collider.gameObject.CompareTag("Rock")  )/////rock mining
                 {
+                    if (hit.collider.GetComponent<ThingData>().thingDiscoverd == false)//discovering new rock
+                    {
+                        bool newObject = true;
+                        for (int i = 0; i < ThingDataScript.AllExploreData.Count; i++)
+                        {
+                            if (ThingDataScript.AllExploreData[i] == hit.collider.GetComponent<ThingData>().ThingsExploreData)
+                            {
+                                newObject = false;
+                            }                           
+                        }              
+                        if (newObject == true)
+                        {
+                            ThingDataScript.AllExploreData.Add(hit.collider.GetComponent<ThingData>().ThingsExploreData);//making this planet discoverd
+                            ThingDataScript.RockData += hit.collider.GetComponent<ThingData>().DataAmount;
+
+                            string StringOfPlanetData = ThingDataScript.RockData.ToString();
+                            RockDiscoverdNumber.GetComponent<TextMeshProUGUI>().text = StringOfPlanetData;
+                        }
+                        hit.collider.GetComponent<ThingData>().thingDiscoverd = true;
+                    }
                     hit.collider.GetComponent<ThingData>().HealthToNewOre -= Damage;////making less time to another ore
 
                     if (0 > hit.collider.GetComponent<ThingData>().HealthToNewOre)/////creating ore
@@ -269,7 +296,8 @@ public class Player : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 techTreeOn = false;
                 techTreeOnUI.SetActive(false);
-                Time.timeScale = 1;
+                sensitivity = 300f;
+                speed = 5;
             }
             else
             {
@@ -277,10 +305,14 @@ public class Player : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 techTreeOn = true;
                 techTreeOnUI.SetActive(true);
-                Time.timeScale = 0;
+                sensitivity = 10;
+                speed = 0;
             }
         }
-
+        if (BuildModeResearched == true)
+        {
+            StartCoroutine(BuildMenuturning());
+        }
     }
 
     void OnTriggerStay(Collider other)
@@ -317,6 +349,17 @@ public class Player : MonoBehaviour
                 /////////////////////////going on planet
                 if (Onplanet == false)
                 {
+                    //seting new data for new discoverd planet
+                    
+                    if (other.transform.GetComponent<ThingData>().thingDiscoverd == false)
+                    {
+                        ThingDataScript.AllExploreData.Add( other.transform.GetComponent<ThingData>().ThingsExploreData);//making this planet discoverd
+                        ThingDataScript.PlanetData+= other.transform.GetComponent<ThingData>().DataAmount;
+                        other.transform.GetComponent<ThingData>().thingDiscoverd = true;
+
+                        string StringOfPlanetData = ThingDataScript.PlanetData.ToString();
+                        PlanetDiscoverdNumber.GetComponent<TextMeshProUGUI>().text = StringOfPlanetData;
+                    }
                     ////player camera chanig to planet mode
                     Camera.transform.localEulerAngles = Camera.transform.up;
                     transform.parent = other.transform;
@@ -371,6 +414,7 @@ public class Player : MonoBehaviour
         if (OnbuildMenu == true)
         {
             speed += speed * Input.GetAxis("Mouse ScrollWheel") / 2;
+            speed = Mathf.Clamp(speed, 1, MaxSpeed);
         }
         
 

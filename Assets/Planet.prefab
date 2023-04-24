@@ -96,6 +96,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 515b2df2c3dce8f4f863b5c4502e3cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotate: 1
+  ThingsExploreData: 0
+  thingDiscoverd: 0
+  thingExplordataType: 
+  Arrowtype: 0
+  PlayerCamera: {fileID: 0}
+  ObjectPlayer: {fileID: 0}
   PlanetComplexity: 0
   Intensity: 0
   PlanetOre1: {fileID: 0}
@@ -110,3 +117,9 @@ MonoBehaviour:
   StartRockSize: 0
   MaxHealthToNewOre: 0
   HealthToNewOre: 0
+  OreAmountInrock: 0
+  OreUI: {fileID: 0}
+  AmountOfOresToDelete: 0
+  AmountOfOres: 0
+  OreType: 
+  OreNumber: 0

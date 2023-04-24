@@ -6,6 +6,7 @@ using TMPro;
 
 public class Building : MonoBehaviour
 {
+    public bool HereOnlyforOneFunction;
     private GameObject hitedThing;
 
     public float rotatingNumber = 20;
@@ -31,15 +32,26 @@ public class Building : MonoBehaviour
     ///////////////setting parameters for thing after buld
     public GameObject Thing;
     /// //////////player 
-    public GameObject player;
+    private GameObject player;
     //////////////buildmode on bool
     public static bool buildmodeOn = false;
 
 
     void Start()
     {
-        buildmodeOn = false;
+        //setting variables
+        if (HereOnlyforOneFunction ==false)
+        {
+            needList = transform.parent.GetComponent<ThingData>().needList;
+            player = transform.parent.GetComponent<ThingData>().ObjectPlayer;
+            ErrorMassageText = transform.parent.GetComponent<ThingData>().Erroremassagetext;
+            inventory = transform.parent.GetComponent<ThingData>().inventory;
+            buildmodeOn = false;
+            
+        }
+
         needList.SetActive(false);
+
     }
 
     ///////////////spawning cube after clicking
@@ -178,6 +190,7 @@ public class Building : MonoBehaviour
             }else if(Input.GetKey(KeyCode.LeftControl) & hitedThing)
             {
                 copySelectThing.transform.eulerAngles = hitedThing.transform.eulerAngles;
+                copySelectThing.transform.parent = hitedThing.transform;
             }
             //grid mode sensitivity change
             rotatingNumber = 20;
@@ -201,17 +214,17 @@ public class Building : MonoBehaviour
                 copySelectThing.transform.localEulerAngles += new Vector3(rotatingX, rotatingY, rotatingZ);
             }
 
+            copySelectThing.transform.parent = player.transform.parent;
 
-           
 
 
 
             //if (player.transform.parent.gameObject.name != "PlayerFolder")
-            
-            
-            
 
-           yield return null;           
+
+
+
+            yield return null;           
         }
         if (Player.OnbuildMenu == true)//ending function when build menu closed
         {
@@ -221,48 +234,15 @@ public class Building : MonoBehaviour
             yield break;
         }
 
-        for (int i = 0; i < AmountResorsesToBuild.Length; i++)////ciling from type of resurse to another type of resurse 
+        
+        if (TakeRecorses(AmountResorsesToBuild, TypeResorsesToBuild) == false)
         {
-            bool HaveEnoughtResorses = false;////if sript will not say true to this variable nothing will be build
-
-            for (int OnChild = 0; OnChild < inventory.transform.childCount; OnChild++)/////cicling on all resourses an tring to find the corect resorse
-            {
-                Transform Child = inventory.transform.GetChild(OnChild);
-                if (Child.GetComponent<ThingData>().OreType == TypeResorsesToBuild[i])/////finding resorse
-                {
-                    HaveEnoughtResorses = true;
-                    ////substracting number of ores from panel
-                    if (Child.GetComponent<ThingData>().AmountOfOres >= AmountResorsesToBuild[i])//////finding if there is big enought number of resorses
-                    {
-                        Child.GetComponent<ThingData>().AmountOfOres -= AmountResorsesToBuild[i];//taking resorses
-
-                        if (Child.GetComponent<ThingData>().AmountOfOres == 0)/////destroying panel when it hold 0 ores
-                        {
-                            Destroy(Child.gameObject);
-                        }
-                        string StringOfAmountOfOres = Child.GetComponent<ThingData>().AmountOfOres.ToString();/////seting text to amount of resorses  
-                        Child.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StringOfAmountOfOres;
-                    }
-                    else
-                    {
-                        HaveEnoughtResorses = false;
-                    }
-                      
-                }
-
-            }
-            if (HaveEnoughtResorses == false )////////////deleting select thing and ending script when not enought resorses
-            {
-                buildmodeOn = false;
-                Destroy(copySelectThing);
-                StartCoroutine(PrintNotEnoughtMaterials());
-                needList.SetActive(false);
-                yield break;
-            }
+            buildmodeOn = false;
+            Destroy(copySelectThing);
+            needList.SetActive(false);
+            yield break;
         }
 
-
-        
 
         GameObject CopyThing = Instantiate(Thing);////copying thing
         CopyThing.transform.position = copySelectThing.transform.position;//setting things position
@@ -275,14 +255,62 @@ public class Building : MonoBehaviour
 
      }
 
+    public void PublicPrintNotEnoughtMaterials()
+    {
+        StartCoroutine(PrintNotEnoughtMaterials());
+    }
 
     IEnumerator PrintNotEnoughtMaterials()
     {
         ErrorMassageText.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "not enough resources";
         ErrorMassageText.SetActive(true);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
         ErrorMassageText.SetActive(false);
+    }
+
+    public bool TakeRecorses(int[] AmountResorses,string[] TypeResorses )
+    {
+        for (int i = 0; i < AmountResorses.Length; i++)////ciling from type of resurse to another type of resurse 
+        {
+            bool HaveEnoughtResorses = false;////if sript will not say true to this variable nothing will be build
+
+            for (int OnChild = 0; OnChild < inventory.transform.childCount; OnChild++)/////cicling on all resourses an tring to find the corect resorse
+            {
+                Transform Child = inventory.transform.GetChild(OnChild);
+                if (Child.GetComponent<ThingData>().OreType == TypeResorses[i])/////finding resorse
+                {
+                    HaveEnoughtResorses = true;
+                    ////substracting number of ores from panel
+                    if (Child.GetComponent<ThingData>().AmountOfOres >= AmountResorses[i])//////finding if there is big enought number of resorses
+                    {
+                        Child.GetComponent<ThingData>().AmountOfOres -= AmountResorses[i];//taking resorses
+
+                        if (Child.GetComponent<ThingData>().AmountOfOres == 0)/////destroying panel when it hold 0 ores
+                        {
+                            Destroy(Child.gameObject);
+                        }
+                        string StringOfAmountOfOres = Child.GetComponent<ThingData>().AmountOfOres.ToString();/////seting text to amount of resorses  
+                        Child.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = StringOfAmountOfOres;
+                    }
+                    else
+                    {
+                        HaveEnoughtResorses = false;
+                    }
+
+                }
+
+            }
+            if (HaveEnoughtResorses == false)////////////deleting select thing and ending script when not enought resorses
+            {
+                
+
+                StartCoroutine(PrintNotEnoughtMaterials());
+                needList.SetActive(false);
+                return false;
+            }
+        }
+        return true;
     }
 }

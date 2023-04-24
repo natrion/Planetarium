@@ -4,18 +4,34 @@ using UnityEngine;
 
 public class ThingData : MonoBehaviour
 {
+    public bool isUITechTree;
+    public List<float> AllExploreData = new List<float>();
+    public float PlanetData;
+    public float RockData;
+    /// <tech tree data>
+    /// //////////
+    /// </summary>
+    public float rotateSpeed;
+    public bool rotate;
+
+    public float DataAmount;
     public float ThingsExploreData;
     public bool thingDiscoverd = false;
     public string thingExplordataType;
 
-    public int Arrowtype;
+
     private float  star_light_itensity;
     public Transform PlayerCamera ;
     public GameObject ObjectPlayer;
+
+    public GameObject needList;
+    public GameObject Erroremassagetext;
+    public GameObject inventory;
+    
     /// <RandomData>
     /// ////////////////////////////////////////////////
     /// <PlanetData>
-    
+
     public float PlanetComplexity;
     public float Intensity;
 
@@ -52,7 +68,7 @@ public class ThingData : MonoBehaviour
  
     void Start()
     {
-        
+        rotateSpeed = Random.Range(-1f, 1f);
         //finding star istensity
         if (transform.childCount != 0)//looking if object is star
         {
@@ -67,11 +83,18 @@ public class ThingData : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isUITechTree == true)
+        {
+            float  UIsize= transform.GetChild(0).GetChild(0).localScale.x + transform.GetChild(0).GetChild(0).localScale.x * Input.GetAxis("Mouse ScrollWheel") ;//controling tech UI scale
+            float maxUIsize= Mathf.Clamp(UIsize, 0.18f, 4);
+
+            transform.GetChild(0).GetChild(0).localScale = new Vector3(1, 1, 1) * maxUIsize;
+        }
         if (Player.pouse == true & Player.OnInventory == true)////if game is not pouse
         {
-            if (PlanetComplexity != 0)/////finding  if it is not a rock
+            if (rotate==true)/////finding  if it is not a rock
             {
-                transform.eulerAngles += new Vector3(0, 0.01f, 0);
+                transform.eulerAngles += new Vector3(0, rotateSpeed, 0) * Time.deltaTime;
             }
             /// <PlanetRotating>
             /// /////////////////////

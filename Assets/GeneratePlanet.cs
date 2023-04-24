@@ -9,6 +9,7 @@ using UnityEngine;
 public class GeneratePlanet : MonoBehaviour
 {
     //Seting Variables
+    public GameObject PlanetOrbit; 
     public GameObject RockFolder;
     public Material[] materials;
     public int textureSize;
@@ -474,13 +475,18 @@ public class GeneratePlanet : MonoBehaviour
                 for (int g = 0; g < MoonNumber; g++)////making X number of moons 
                 {                               // max complexity       //anabling rocks to spawn
                     GenerateParametersForPlanet((float)Complexity / 2 , false);
-                    plantcopy.transform.parent = Bigplantcopy.transform;
+
+                    GameObject MoonOrbit = Instantiate(PlanetOrbit);
+                    MoonOrbit.transform.position = Bigplantcopy.transform.position;
+                    MoonOrbit.transform.parent = Bigplantcopy.transform;
+
+                    plantcopy.transform.parent = MoonOrbit.transform;
                     float a;////calculating moon position (and making it not spawn is planet)
                     if (Random.Range(-1, 2) == 1) { a = 1; } else { a = -1; }
                     float b;
                     if (Random.Range(-1, 2) == 1) { b = 1; } else { b = -1; }
 
-                    plantcopy.transform.position = new Vector3(Random.Range(500, 1000) * a + Bigplantcopy.transform.position.x, 0, Random.Range(500, 1000) * b + Bigplantcopy.transform.position.z);
+                    plantcopy.transform.localPosition = new Vector3(Random.Range(500, 1000) * a , 0, Random.Range(500, 1000) * b );
 
                     
                 }
@@ -575,7 +581,7 @@ public class GeneratePlanet : MonoBehaviour
                 plantcopy = Instantiate(PlanetCanvas);
                 Complexity = Random.Range(50, 80);
 
-                PlanetShapeIntensity = Random.Range(20f, 30f);
+                PlanetShapeIntensity = Random.Range(0, 0);
                 PerlinoiseIntensity = Random.Range(4f, 8f);
                 PerlinoiseIntensity2 = Random.Range(10f, 14f);
                 PerlinoiseIntensity3 = Random.Range(16f, 24f);
@@ -602,6 +608,8 @@ public class GeneratePlanet : MonoBehaviour
                 BiomColor2 = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
                 PerlinoiseIntensityBiom2 = Random.Range(1.2f, 1.6f);
                 PerlinoiseDestortionBiom2 = Random.Range(6f, 10f);
+
+                OneGeneratePlanet();
             }
             
             if (i==0)////efecting rock1 on tur 1     and rock2 on turn 2
@@ -618,20 +626,22 @@ public class GeneratePlanet : MonoBehaviour
 
             plantcopy.transform.localScale = new Vector3(1, 1, 1) * Random.Range(0.02f, 0.05f);////randomly scaling rock
 
-            plantcopy.GetComponent<ThingData>().Health = plantcopy.transform.localScale.x * 400;////seting rock health 
-            plantcopy.GetComponent<ThingData>().MaxHealth = plantcopy.transform.localScale.x * 400;////seting rock  max health so the script can scale it down when mining corectly
+            plantcopy.GetComponent<ThingData>().Health = plantcopy.transform.localScale.x * 10 * (float)Complexity;////seting rock health 
+            plantcopy.GetComponent<ThingData>().MaxHealth = plantcopy.transform.localScale.x * 10 * (float)Complexity;////seting rock  max health so the script can scale it down when mining corectly
 
             plantcopy.GetComponent<ThingData>().StartRockSize = plantcopy.transform.localScale.x * 2.8f;////seting rock scale so the script can scale it down when mining corectly
 
             plantcopy.GetComponent<ThingData>().Ore = OreFolder.transform.GetChild(Random.Range(0, OreFolder.transform.childCount)).gameObject;////seting rocks ore
 
-            plantcopy.GetComponent<ThingData>().MaxHealthToNewOre = Random.Range(8f, 12f);// seting MaxHealthToNewOre
+            plantcopy.GetComponent<ThingData>().MaxHealthToNewOre = Random.Range(2f, 6f);// seting MaxHealthToNewOre
             plantcopy.GetComponent<ThingData>().HealthToNewOre = plantcopy.GetComponent<ThingData>().MaxHealthToNewOre;// seting HealthToNewOre
 
             plantcopy.GetComponent<ThingData>().ThingsExploreData = Random.Range(0, 1000000000000000.000f);
             plantcopy.GetComponent<ThingData>().thingExplordataType = "Planet Data";
+            plantcopy.GetComponent<ThingData>().rotate = false;
+            plantcopy.GetComponent<ThingData>().DataAmount = Random.Range(3, 10);
 
-            OneGeneratePlanet();
+            
             if (i == 0)////efecting rock1 on tur 1     and rock2 on turn 2
             {
                 Destroy(plantcopyRock);////Destroing rock1 so there is not any not wanted rock in the scene
@@ -722,7 +732,7 @@ public class GeneratePlanet : MonoBehaviour
         PerlinoiseIntensity2 = Random.Range(5f, 7f)  ;
         PerlinoiseIntensity3 = Random.Range(8f, 12f) ;
 
-        PlanetShapeDestortion = Random.Range(0.7f, 2f) * Mathf.Clamp(( 1200f / (float)Complexity) / 4f, 1, 10f);
+        PlanetShapeDestortion = Random.Range(0.7f, 1f) * Mathf.Clamp(( 1200f / (float)Complexity) / 4f, 1, 10f);
         PerlinoiseDestortion = Random.Range(0.7f, 2f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); 
         PerlinoiseDestortion2 = Random.Range(2.5f, 3.5f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); 
         PerlinoiseDestortion3 = Random.Range(7f, 10f) * Mathf.Clamp((1200f / (float)Complexity) / 4f, 1, 10f); 
@@ -771,6 +781,7 @@ public class GeneratePlanet : MonoBehaviour
         plantcopy.GetComponent<ThingData>().HealthToNewOre2 = plantcopy.GetComponent<ThingData>().PlanetMaxHealthToNewOre2;
         plantcopy.GetComponent<ThingData>().ThingsExploreData = Random.Range(0, 1000000000000000.000f);
         plantcopy.GetComponent<ThingData>().thingExplordataType = "Planet Data";
+        plantcopy.GetComponent<ThingData>().DataAmount = Random.Range(3, 10);
     }
     void Updatee()
     {

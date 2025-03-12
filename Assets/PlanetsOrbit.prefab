@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -240162741939563806}
   m_Layer: 0
   m_Name: PlanetsOrbit
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,13 +44,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 515b2df2c3dce8f4f863b5c4502e3cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isUITechTree: 0
+  AllExploreData: []
+  PlanetData: 0
+  RockData: 0
+  rotateSpeed: 0
   rotate: 1
+  DataAmount: 0
   ThingsExploreData: 0
   thingDiscoverd: 0
   thingExplordataType: 
-  Arrowtype: 0
   PlayerCamera: {fileID: 0}
   ObjectPlayer: {fileID: 0}
+  needList: {fileID: 0}
+  Erroremassagetext: {fileID: 0}
+  inventory: {fileID: 0}
   PlanetComplexity: 0
   Intensity: 0
   PlanetOre1: {fileID: 0}

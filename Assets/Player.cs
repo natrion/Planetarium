@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     public static bool OnInventory = true;
     public GameObject Camera;
     public float sensitivity;
+    public float sensitivityNotInBildMenu;
     public float MaxSpeed ;
     public float speed ;
     public float Gravitystrenght;
@@ -37,12 +38,24 @@ public class Player : MonoBehaviour
     [DllImport("user32.dll")]
     static extern bool SetCursorPos(int X, int Y);
 
+    private int CameraYInvert = 1;
+    private int CameraXInvert = 1;
+    public void ChangeScrollSpeed(float ChangSensitivity)
+    {
+        ChangSensitivity *= 5;    
+        sensitivity = ChangSensitivity;
+        sensitivityNotInBildMenu = ChangSensitivity;
+    }
+    public void YInvert()
+    {
+        CameraYInvert *= -1;
+    }
+    public void XInvert()
+    {
+        CameraXInvert *= -1;
+    }
 
-
-
-
-
-     IEnumerator BuildMenuturning()///////////////seting building menu not in update function must be deley between closing build menu
+    IEnumerator BuildMenuturning()///////////////seting building menu not in update function must be deley between closing build menu
      {
        
         
@@ -296,7 +309,7 @@ public class Player : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 techTreeOn = false;
                 techTreeOnUI.SetActive(false);
-                sensitivity = 300f;
+                sensitivity = sensitivityNotInBildMenu;
                 speed = 5;
             }
             else
@@ -305,7 +318,7 @@ public class Player : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 techTreeOn = true;
                 techTreeOnUI.SetActive(true);
-                sensitivity = 10;
+                sensitivity = 0.1f;
                 speed = 0;
             }
         }
@@ -438,8 +451,8 @@ public class Player : MonoBehaviour
             //////////////////////////////rotating camera in space
             if (Onplanet == false)
             {
-                transform.eulerAngles += new Vector3(0, mX * sensitivity / 50, 0);
-                YRotation += mY * Time.deltaTime * sensitivity;
+                transform.eulerAngles += new Vector3(0, mX * sensitivity , 0);
+                YRotation += mY  * sensitivity;
                 YRotation = Mathf.Clamp(YRotation, -90, 90);
 
                 Camera.transform.localEulerAngles = Vector3.left * YRotation;
@@ -456,9 +469,9 @@ public class Player : MonoBehaviour
                 //                                       planetPositionDiference.z / floatplanetPositionDiference);
                 //Camera.transform.localEulerAngles += Vector3.left * mY * sensitivity;
                 //Camera.transform.localEulerAngles += Vector3.up * mX * sensitivity;
-                transform.Rotate((Vector3.up * mX) * Time.deltaTime * sensitivity);
+                transform.Rotate((Vector3.up * mX)  * sensitivity * CameraXInvert);
 
-                YRotation += mY * Time.deltaTime * sensitivity;
+                YRotation += mY  * sensitivity * CameraYInvert;
                 YRotation = Mathf.Clamp(YRotation, -80, 80);
                 Camera.transform.localEulerAngles = Vector3.left * YRotation;
                 // print("Near Planet");

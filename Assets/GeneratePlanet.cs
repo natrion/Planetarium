@@ -465,7 +465,8 @@ public class GeneratePlanet : MonoBehaviour
             PlanetsPositions[i] = plantcopy.transform.position;//// adding position to ather planet positions
             if (i == 0)/////planet can not have moons if it is too small
             {
-                player.position = plantcopy.transform.position + new Vector3(0, plantcopy.GetComponent<ThingData>().PlanetComplexity / 3, 0);
+                Complexity = 20;
+                player.position = plantcopy.transform.position + new Vector3(0, 0, plantcopy.GetComponent<ThingData>().PlanetComplexity / 3);
             }
             if (Complexity > 250)
             {
